@@ -1,0 +1,8 @@
+@font-face {
+    font-family: smooch;
+    src: url(./components/fonts/Smooch-Regular.ttf);
+}
+
+
+@import url(styles/mainpage.css);
+@import url(styles/form.css);

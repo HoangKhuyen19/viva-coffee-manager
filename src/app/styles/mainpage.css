@@ -1,0 +1,78 @@
+.div-content-left{
+    color: aliceblue;
+    width: 20%;
+    background-color: rgb(11, 12, 95);
+    background-color: rgb(70, 73, 230);
+    height: 700px;
+    padding-top: 20px; 
+    /* 2 thẻ content được đặt theo chiều ngang */
+    display: inline-block;
+
+    /* Nội dung được ghi trên cùng của div */
+    vertical-align: top;
+
+    /* Xếp các item theo chiều dọc */
+    flex-direction: column;
+
+    text-align: center;
+}
+
+.div-content-right{
+    width: 80%;
+    background-color: rgb(245, 243, 242);
+    height: 700px;
+    display: inline-block;
+
+}
+
+h4{
+    margin: 2px;
+}
+.line{
+    width: 100%;
+    background-color: black;
+    border: 0;
+}
+
+
+.nav-manager button{
+    width: 80%;
+    background-color: rgb(70, 73, 230);
+    border: 0;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-align: left;
+}
+
+.nav-manager button:hover{
+    background-color:rgb(138, 139, 238);
+    color: black;
+}
+
+.container{
+    background-color: antiquewhite;
+    width: 100%;
+}
+
+.search{
+    display: inline-block;
+    position: relative;
+}
+
+.inp-search{
+    width: 350px;
+    height: 30px;
+    border: 0;
+}
+.btn-search{
+    position: absolute;
+    width: 80px;
+    height: 33px;
+    right: 0;
+    top: 0;
+    border: 0;
+    background-color: brown;
+}
