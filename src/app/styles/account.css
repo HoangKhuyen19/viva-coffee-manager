@@ -1,0 +1,141 @@
+/* Tìm kiếm */
+
+/* cái này container*/
+.sreach-container{
+    display: flex;
+    align-items: center;
+    margin-left: 400px;
+    margin-top: 50px;
+}
+
+/* ô tìm kiếm */
+.account-search{
+    border-radius: 4px 0 0 4px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 250px;
+}
+
+/* Nút tìm kiếm*/
+.button-sreach{
+    border-radius: 0 4px 4px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #CD853F;
+    cursor: pointer;
+}
+
+/*Nút thêm*/
+.button-add{
+    border-radius: 0 4px 4px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #CD853F;
+    margin-left: 5px;
+    width: 70px;
+}
+
+/* thêm hiệu ứng cho nút add */
+.button-add:hover{
+    font-size: 14px;
+}
+
+
+
+
+/*========================== CSS  Table ==================*/
+
+
+#AccountTable{
+    width:90%;
+    border-collapse: collapse;
+    border-color: black;
+    margin-left: 100px;
+}
+#AccountTable th{
+    background-color: rgb(222,184,135); 
+    text-align: center;
+     
+ }
+#AccountTable td{
+    text-align: center;
+}
+
+
+/* Nút update ở cột trong bảng */
+.button-update{
+    background-color: rgb(222,184,135);
+    border: 0px;
+    border-radius: 4px;
+    padding: 2px;
+}
+/* Nút xóa ở cột trong bảng */
+.button-delete {
+    background-color: rgb(222,184,135);
+    border: 0px;
+    border-radius: 4px;
+    padding: 2px;
+    margin-left: 2px;
+}
+
+/*======================*/
+
+/* Cái khung khi mở form từ nút Thêm*/
+
+/*test tao thề t copy của con hiếu, t không hiểu thật*/
+.container-form-account{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.form-account{
+    text-align: center;
+    border: 1px solid black;
+    width: 250px;
+    height: 300px;
+    border-radius: 5px;
+    margin-top: 30px;
+    margin-bottom: 100px;
+    background-color: white;
+    
+}
+
+.account-user, .account-password, .account-fullName{
+    border: 1px solid grey;
+    padding: 4px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+/* Điều chỉnh tag Select*/
+.inputSelect-account{
+    width: 180px;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid grey;
+    padding: 4px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+/*Dấu X để tắt*/
+.button-add-account{
+    width: 90px;
+    height: 25px;
+    background-color: #CD853F;
+    border: 5px;
+    border-radius: 5px;
+}
+/* Dấu X khi cái form được mở ra*/
+.close-button-account{
+    margin-left: 230px;
+    cursor: pointer;
+}

@@ -1,11 +1,10 @@
 .div-content-left{
-    color: aliceblue;
+    position: fixed;
+    color: rgb(212, 228, 241);
     width: 20%;
-    background-color: rgb(11, 12, 95);
-    background-color: rgb(70, 73, 230);
+    background-color:rgb(37, 37, 70);
     height: 700px;
-    padding-top: 20px; 
-    /* 2 thẻ content được đặt theo chiều ngang */
+    
     display: inline-block;
 
     /* Nội dung được ghi trên cùng của div */
@@ -15,64 +14,80 @@
     flex-direction: column;
 
     text-align: center;
+
+    font-size: 16px;
 }
 
+
 .div-content-right{
+    float: right;
     width: 80%;
     background-color: rgb(245, 243, 242);
     height: 700px;
     display: inline-block;
-
 }
 
 h4{
     margin: 2px;
 }
+
 .line{
     width: 100%;
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     border: 0;
+    height: 2px;
 }
 
 
 .nav-manager button{
-    width: 80%;
-    background-color: rgb(70, 73, 230);
+    width: 100%;
+    background-color:rgb(37, 37, 70);
     border: 0;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    color: rgb(255, 255, 255);
+    padding: 10%;
+    padding-left: 23%;
+    color: rgb(212, 228, 241);
     font-weight: bold;
     text-align: left;
+    font-size: 15px;
 }
 
 .nav-manager button:hover{
-    background-color:rgb(138, 139, 238);
-    color: black;
-}
-
-.container{
-    background-color: antiquewhite;
-    width: 100%;
+    background-color:rgb(22, 22, 54);
+    color:antiquewhite;
 }
 
 .search{
     display: inline-block;
     position: relative;
+    padding: 0;
+    width: 350px;
+    height: 30px;
 }
 
 .inp-search{
-    width: 350px;
-    height: 30px;
-    border: 0;
+    border-radius: 4px 0 0 4px;
+    width: 100%;
+    height: 100%;
+    border: 1;
+    padding: 0;
+    box-sizing: border-box;
 }
 .btn-search{
+    border-radius: 0 4px 4px 0;
     position: absolute;
     width: 80px;
-    height: 33px;
+    height: 100%;
+    padding: 0;
     right: 0;
     top: 0;
-    border: 0;
-    background-color: brown;
+    border: 1;
+   background-color: #CD853F;
+}
+
+.selectedTab{
+    background-color: rgb(54, 64, 104) !important; 
+}
+.form-search{
+    text-align: center;
+    margin-top: 100px;
 }

@@ -1,80 +1,78 @@
 import Image from "next/image";
-import Header from "./Header";
-import Search from "./Search";
+import { useEffect, useState } from "react";
+import ProductTypeManager from "./ProductTypeManager";
+import OrderManager from "./OrderManager";
+import AccountPageManager from "./AccountManager";
+import ProductManager from "./ProductManager";
 
+//Type Tab
+type Tab = "ProductTypeManager" | "ProductManager" | "AccountManager" | "OrderManager" | null;
 
 export default function ManagerPage() {
+    //States:
+    const [user, setUser] = useState({ fullName: "", permission: "" })
+    const [selectedTab, setSelectedTab] = useState<Tab>(null);
+
+    //Event handler:
+    const handlerTabClick = (tab: Tab) => {
+        setSelectedTab(tab)
+    }
+
+    const getTabClass = (tab:Tab) => {
+        return tab === selectedTab? "selectedTab":"";
+    }
+
+    //useEffect:
+    useEffect(() => {
+        //Get user from sessionStorage
+        const userStored = sessionStorage.getItem("user");
+
+        if (userStored) {
+            const userData = JSON.parse(userStored);
+            setUser({ fullName: userData.fullName, permission: userData.permission })
+        }
+    })
+
+    //View
     return (
         <div>
             {/* Left-content */}
             <div className="div-content-left">
-
+                {/* Header */}
+                <div className="div-header" >
+                    <label className="viva" onClick={()=>handlerTabClick(null)}>Viva Coffee </label>
+                    
+                </div>
                 <div className="div-user">
                     <Image
                         src="/user.png"
                         alt="Description of the image"
-                        width={50} // Độ rộng của hình ảnh
-                        height={50} // Chiều cao của hình ảnh
+                        width={50}
+                        height={50}
                     />
-                    <h4>Hoàng Khuyến</h4>
-                    <label>-- Admin --</label>
+                    <h4>{user.fullName}</h4>
+                    <label>{user.permission}</label>
                 </div>
 
-                <button className="line"></button>
+                <div className="line"></div>
+
+                {/* Navigation */}
                 <div className="nav-manager">
-                    <button>Quản lý loại sản phẩm</button>
-                    <button>Quản lý sản phẩm</button>
-                    <button>Quản lý tài khoản</button>
-                    <button>Quản lý đơn hàng</button>
+                    <button onClick={() => handlerTabClick("ProductTypeManager")} className={getTabClass("ProductTypeManager")}> Quản lý loại sản phẩm </button>
+                    <button onClick={() => handlerTabClick("ProductManager")} className={getTabClass("ProductManager")}>Quản lý sản phẩm</button>
+                    <button onClick={() => handlerTabClick("AccountManager")} className={getTabClass("AccountManager")}>Quản lý tài khoản</button>
+                    <button onClick={() => handlerTabClick("OrderManager")} className={getTabClass("OrderManager")}>Quản lý đơn hàng</button>
                 </div>
 
             </div>
 
             {/* Right-content */}
             <div className="div-content-right">
-                <Header />
-                {/* container */}
-                <div className="container">
-
-                    
-                    {/* top-div */}
-                    <div className="top-div">
-                        <label> Quản lý sản phẩm</label>
-                        <Search/>
-                        <button>Thêm sản phẩm</button>
-                    </div>
-
-                    {/* table div */}
-                    <div>
-                        <table cellPadding={10}>
-                            {/* table head */}
-                            <thead>
-                                <tr>
-                                <th>Mã sản phẩm</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Loại</th>
-                                <th>Giá</th>
-                                <th>Mô tả</th>
-                                </tr>
-                                
-                            </thead>
-
-                            {/* table body */}
-                            <tbody>
-                                <tr>
-                                <td>CF01</td>
-                                <td>Cà phê muối</td>
-                                <td>Cà phê</td>
-                                <td>20000</td>
-                                <td>Có muối</td>
-                                <td><button className="update">Cập nhật</button></td>
-                                <td><button className="delete">Xoá</button></td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {/* Display corresponding component*/}
+                {selectedTab === "ProductTypeManager" && <ProductTypeManager />}
+                {selectedTab === "ProductManager" && <ProductManager />}
+                {selectedTab === "AccountManager" && <AccountPageManager />}
+                {selectedTab === "OrderManager" && <OrderManager />}
             </div>
         </div>
     );

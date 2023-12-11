@@ -2,7 +2,16 @@
     font-family: smooch;
     src: url(./components/fonts/Smooch-Regular.ttf);
 }
+@font-face {
+    font-family: brush;
+    src: url(./components/fonts/CaveatBrush-Regular.ttf);
+}
 
 
 @import url(styles/mainpage.css);
 @import url(styles/form.css);
+@import url(styles/login.css);
+@import url(styles/product-type.css);
+@import url(styles/oderform.css);
+@import url(styles/account.css);
+@import url(styles/product.css);
