@@ -4,6 +4,8 @@ import ProductTypeManager from "./ProductTypeManager";
 import OrderManager from "./OrderManager";
 import AccountPageManager from "./AccountManager";
 import ProductManager from "./ProductManager";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers, faList, faBook, faMugHot, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 //Type Tab
 type Tab = "ProductTypeManager" | "ProductManager" | "AccountManager" | "OrderManager" | null;
@@ -12,14 +14,16 @@ export default function ManagerPage() {
     //States:
     const [user, setUser] = useState({ fullName: "", permission: "" })
     const [selectedTab, setSelectedTab] = useState<Tab>(null);
+    // const [isImageVisible,setImageVisible] = useState(true);
 
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
         setSelectedTab(tab)
+        // setImageVisible(tab === null)
     }
 
-    const getTabClass = (tab:Tab) => {
-        return tab === selectedTab? "selectedTab":"";
+    const getTabClass = (tab: Tab) => {
+        return tab == selectedTab ? "selectedTab" : "";
     }
 
     //useEffect:
@@ -31,7 +35,7 @@ export default function ManagerPage() {
             const userData = JSON.parse(userStored);
             setUser({ fullName: userData.fullName, permission: userData.permission })
         }
-    })
+    },[])
 
     //View
     return (
@@ -40,8 +44,8 @@ export default function ManagerPage() {
             <div className="div-content-left">
                 {/* Header */}
                 <div className="div-header" >
-                    <label className="viva" onClick={()=>handlerTabClick(null)}>Viva Coffee </label>
-                    
+                    <label className="viva" onClick={() => handlerTabClick(null)}>Viva Coffee </label>
+
                 </div>
                 <div className="div-user">
                     <Image
@@ -58,17 +62,44 @@ export default function ManagerPage() {
 
                 {/* Navigation */}
                 <div className="nav-manager">
-                    <button onClick={() => handlerTabClick("ProductTypeManager")} className={getTabClass("ProductTypeManager")}> Quản lý loại sản phẩm </button>
-                    <button onClick={() => handlerTabClick("ProductManager")} className={getTabClass("ProductManager")}>Quản lý sản phẩm</button>
-                    <button onClick={() => handlerTabClick("AccountManager")} className={getTabClass("AccountManager")}>Quản lý tài khoản</button>
-                    <button onClick={() => handlerTabClick("OrderManager")} className={getTabClass("OrderManager")}>Quản lý đơn hàng</button>
+                    {/* Button product type manager */}
+                    <button onClick={() => handlerTabClick("ProductTypeManager")} className={getTabClass("ProductTypeManager")}>
+                        <FontAwesomeIcon icon={faList} className="icon" />
+                        Quản lý loại sản phẩm
+                    </button>
+
+                    {/* Button product manager */}
+                    <button onClick={() => handlerTabClick("ProductManager")} className={getTabClass("ProductManager")}>
+                        <FontAwesomeIcon icon={faMugHot} className="icon" />
+                        Quản lý sản phẩm
+                    </button>
+
+                    {/* Button account manager */}
+                    <button onClick={() => handlerTabClick("AccountManager")} className={getTabClass("AccountManager")}>
+                        <FontAwesomeIcon icon={faUsers} className="icon" />
+                        Quản lý tài khoản
+                    </button>
+
+                    {/* Button order manager */}
+                    <button onClick={() => handlerTabClick("OrderManager")} className={getTabClass("OrderManager")}>
+                        <FontAwesomeIcon icon={faBook} className="icon" />
+                        Quản lý đơn hàng
+                    </button>
+
+                    <div className="bottom">
+                        <div className="line"></div>
+                        {/* Button log out */}
+                        <button>
+                        <FontAwesomeIcon icon={faRightFromBracket} className="icon" /> Đăng xuất
+                        </button>
+                    </div>
                 </div>
 
             </div>
 
             {/* Right-content */}
             <div className="div-content-right">
-                {/* Display corresponding component*/}
+                {selectedTab === null && <div className="img"> </div>}
                 {selectedTab === "ProductTypeManager" && <ProductTypeManager />}
                 {selectedTab === "ProductManager" && <ProductManager />}
                 {selectedTab === "AccountManager" && <AccountPageManager />}

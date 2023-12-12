@@ -2,8 +2,8 @@
     position: fixed;
     color: rgb(212, 228, 241);
     width: 20%;
-    background-color:rgb(37, 37, 70);
-    height: 700px;
+    background-color:#bb7936;
+    height: 100vh;
     
     display: inline-block;
 
@@ -23,12 +23,27 @@
     float: right;
     width: 80%;
     background-color: rgb(245, 243, 242);
-    height: 700px;
+    height: 100vh;
     display: inline-block;
+
+    /* Thanh cuộn nếu nội dung dài thêm */
+    overflow-y: auto;
 }
 
+/* Hình trang manager */
+.img{
+    height: 100vh;
+    width: 100%;
+    background: url('/coffee.jpg');
+    background-size: cover;
+}
 h4{
     margin: 2px;
+    color: black;
+}
+
+label{
+    color: black;
 }
 
 .line{
@@ -41,10 +56,10 @@ h4{
 
 .nav-manager button{
     width: 100%;
-    background-color:rgb(37, 37, 70);
+    background-color: #bb7936;
     border: 0;
-    padding: 10%;
-    padding-left: 23%;
+    padding: 9%;
+    padding-left: 16%;
     color: rgb(212, 228, 241);
     font-weight: bold;
     text-align: left;
@@ -52,8 +67,8 @@ h4{
 }
 
 .nav-manager button:hover{
-    background-color:rgb(22, 22, 54);
-    color:antiquewhite;
+    background-color:#CD853F;
+    color:rgb(87, 83, 77);
 }
 
 .search{
@@ -85,9 +100,26 @@ h4{
 }
 
 .selectedTab{
-    background-color: rgb(54, 64, 104) !important; 
+    background-color: #F4A460 !important; 
+    color: rgb(39, 37, 37) !important;
 }
 .form-search{
     text-align: center;
     margin-top: 100px;
+}
+
+.icon{
+    margin-right: 20px;
+    font-size: 17px;
+}
+.image{
+    text-align: center;
+    margin-top: 55px;
+}
+
+.bottom{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }

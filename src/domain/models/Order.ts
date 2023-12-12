@@ -7,15 +7,15 @@ export default class Order{
     private date?: Date;
     private totalPrice?: number;
     private createdBy?: User;
-    private orders : OrderDetail[];
+    private orderDetails : OrderDetail[];
     
     //Constructor:
-    public constructor(id?:string, date?:Date, totalPrice?:number, createdBy?:User, orders?: OrderDetail[]){
+    public constructor(id?:string, date?:Date, totalPrice?:number, createdBy?:User, orderDetails?: OrderDetail[]){
         this.id = id;
         this.date = date;
         this.totalPrice = totalPrice;
         this.createdBy = createdBy;
-        this.orders = (orders || []);
+        this.orderDetails = (orderDetails || []);
     }
 
     //Methods:
@@ -23,7 +23,7 @@ export default class Order{
         return this.id;
     }
 
-    public set Id(id: string){
+    public set Id(id: string| undefined){
         this.id = id;
     }
 
@@ -39,7 +39,7 @@ export default class Order{
         return this.totalPrice;
     }
 
-    public set TotalPrice(totalPrice:number){
+    public set TotalPrice(totalPrice:number| undefined){
         this.totalPrice = totalPrice;
     }
 
@@ -47,15 +47,15 @@ export default class Order{
         return this.createdBy;
     }
 
-    public set CreateBy(createdBy: User){
+    public set CreateBy(createdBy: User| undefined){
         this.createdBy = createdBy;
     }
 
-    public get Orders() : OrderDetail[]{
-        return this.orders;
+    public get OrderDetails() : OrderDetail[]{
+        return this.orderDetails;
     }
 
-    public set Orders(orders: OrderDetail[]){
-        this.orders = orders;
+    public set OrderDetails(orderDetails: OrderDetail[]){
+        this.orderDetails = orderDetails;
     }
 }
