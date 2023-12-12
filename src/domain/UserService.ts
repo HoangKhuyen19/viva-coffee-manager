@@ -7,13 +7,13 @@ import IOrderService from "./interfaces/IOrderService";
 
 
 
-export class UserService implements IUserService{
+export class UserService implements IUserService {
     //Fields:
-    private userDBHandler : IUserDBHandler;
+    private userDBHandler: IUserDBHandler;
     private orderService?: IOrderService;
 
     //Constructor
-    public constructor(orderService?: IOrderService){
+    public constructor(orderService?: IOrderService) {
         this.userDBHandler = new UserDBHandler();
         this.orderService = orderService;
     }
@@ -37,22 +37,22 @@ export class UserService implements IUserService{
     }
 
     //Methods:
-    async get(username: string) : Promise<User | undefined>{
+    async get(username: string): Promise<User | undefined> {
         //Try getting data
         try {
-            var userData : UserData | undefined = await this.userDBHandler.get(username);
+            var userData: UserData | undefined = await this.userDBHandler.get(username);
         } catch (error) {
             throw error;
         }
 
         //User data not found
-        if(!userData){
+        if (!userData) {
             return;
         }
-        
+
         //Try converting
         try {
-            var user : User =  await this.dataToUser(userData);
+            var user: User = await this.dataToUser(userData);
         } catch (error) {
             throw error
         }
@@ -61,7 +61,7 @@ export class UserService implements IUserService{
         return user;
     }
 
-    async getAll() : Promise<User[]>{
+    async getAll(): Promise<User[]> {
         //Try getting data
         try {
             var usersData = await this.userDBHandler.getAll();
@@ -71,73 +71,73 @@ export class UserService implements IUserService{
 
         //Converting
         try {
-            var users : User[] = await this.multiDataToUser(usersData);
+            var users: User[] = await this.multiDataToUser(usersData);
         } catch (error) {
             throw error;
         }
-        
+
         //Return
         return users;
     }
 
-    async insert(user : User) : Promise<void>{
+    async insert(user: User): Promise<void> {
         //Converting user to data
-        const userData : UserData = this.userToData(user);
+        const userData: UserData = this.userToData(user);
 
         //Try inserting
         try {
             await this.userDBHandler.insert(userData);
-        }catch(error:any){
+        } catch (error: any) {
             throw error;
         }
     }
 
-    async update(user : User) : Promise<void>{
+    async update(user: User): Promise<void> {
         //Converting user to data
-        const userData : UserData = this.userToData(user);
+        const userData: UserData = this.userToData(user);
 
         //Try updating
         try {
             await this.userDBHandler.update(userData);
-        }catch(error:any){
+        } catch (error: any) {
             throw error;
         }
     }
 
-    async delete(username :any){
+    async delete(username: any) {
         //Try deleting
         try {
             await this.userDBHandler.delete(username);
-        }catch(error:any){
+        } catch (error: any) {
             throw error;
         }
     }
 
-    //Local methods
-    private userToData(user:User):UserData{
-        return{
-            username : user.Username as string,
-            password : user.Password as string,
-            fullName : user.FullName as string,
-            permission : user.Permission as string
+    //Local methods 
+    private userToData(user: User): UserData {
+        return {
+            username: user.Username as string,
+            password: user.Password as string,
+            fullName: user.FullName as string,
+            permission: user.Permission as string
         }
     }
-    private async dataToUser(data :UserData) : Promise<User>{
-        const seft : UserService = this;
+    private async dataToUser(data: UserData): Promise<User> {
+        const seft: UserService = this;
 
-        //user declaration
-        let user : User = new User();
 
-        async function getOrders(username: string,user : User) : Promise<void>{
-            if(seft.orderService){
+        async function getOrders(username: string, userT: User): Promise<void> {
+            if (seft.orderService) {
                 //Get order list of user
                 try {
-                    user.Orders =  await seft.orderService.getByFilter({createdBy : username});
+                    userT.Orders = await seft.orderService.getByFilter({createdBy:username});
                 } catch (error) {
                     throw error;
                 }
             }
         }
+        //user declaration
+        let user: User = new User();
 
         //Copy fields:
         user.Username = data.username;
@@ -150,11 +150,11 @@ export class UserService implements IUserService{
         } catch (error) {
             throw error
         }
-        //Return:
+        //Return
         return user;
     }
 
-    private async multiDataToUser(data: UserData[]) : Promise<User[]>{
+    private async multiDataToUser(data: UserData[]): Promise<User[]> {
         const result: User[] = [];
 
         //Try converting
@@ -167,5 +167,14 @@ export class UserService implements IUserService{
         }
 
         return result;
+    }
+
+    //Getter setter
+    public get OrderService(): IOrderService | undefined {
+        return this.orderService;
+    }
+
+    public set OrderService(orderService: IOrderService | undefined) {
+        this.orderService = orderService;
     }
 }

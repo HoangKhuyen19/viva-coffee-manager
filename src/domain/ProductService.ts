@@ -163,4 +163,13 @@ export class ProductService implements IProductService{
         //Return
         return result;
     }
+
+    //Getter setter
+    public get ProductTypeService(): IProductTypeService | undefined {
+        return this.productTypeService;
+    }
+
+    public set ProductTypeService(productTypeService: IProductTypeService | undefined) {
+        this.productTypeService = productTypeService;
+    }
 }

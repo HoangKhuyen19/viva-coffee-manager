@@ -3,7 +3,7 @@ import { Collection, Db, Document, MongoClient, WithId } from "mongodb";
 const hostName:string = "localhost";
 const port:string = "27017";
 const url:string = `mongodb://${hostName}:${port}`
-const dbName:string = "VivaCoffee";
+const dbName:string = "VivaCoffeeManager";
 
 //interface 
 export interface AccessCollection{

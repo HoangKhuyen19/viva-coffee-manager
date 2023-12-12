@@ -21,12 +21,12 @@ async function test(){
     // console.log(proTypes,pro222);
     var product: Product[] = await pro.getByFilter({type:"CF"});
     var proty : ProductType[] = await proType.getByFilter({id:"CF"})
-    console.log(proty,product);
+    console.log(product);
 }
 
 async function testOrder(){
     //UserService
-    const userService: UserService  = new UserService();
+    const userServiceT: UserService  = new UserService();
 
     //Product Service
     const productService: ProductService = new ProductService();
@@ -38,13 +38,14 @@ async function testOrder(){
     const orderDetailService : OrderDetailService = new OrderDetailService(orderServiceTest,productService);
 
     //OrderService
-    const orderService: OrderService = new OrderService(userService,orderDetailService);
+    const orderService: OrderService = new OrderService(userServiceT,orderDetailService);
+    const userService: UserService  = new UserService(orderServiceTest);
     
     async function insertOrder(){
         const order: Order = new Order();
-        order.Id = "121220230001";
+        order.Id = "121220230002";
         order.Date = new Date();
-        order.TotalPrice = 1000;
+        order.TotalPrice = 30000;
         try {
             var user : User | undefined = await userService.get("hoangkhuyen");
         } catch (error) {
@@ -93,14 +94,14 @@ async function testOrder(){
         }
     }
 
-    async function getOrder() : Promise<Order | undefined>{
+    async function getOrder() : Promise<void>{
         try {
-            var order : Order | undefined = await orderService.get("121220230001");
+            var order : Order[] = await orderService.getByFilter({createdBy:"hoangkhuyen"});
         } catch (error) {
             throw error;
         }
 
-        return order;
+        console.log(order);
     }
     async function updateUser(){
 
@@ -125,11 +126,25 @@ async function testOrder(){
         user.Orders.push(order);
         try {
             await userService.update(user);
+            console.log("Update success");
         } catch (error) {
             throw error;
         }
     }
+    async function getUser(){
+
+        try {
+            var user : User [] = await userService.getByFilter({username:"hoangkhuyen"});
+        } catch (error) {
+            throw error;
+        }
+        console.log(user);
+    }
+
+    //insertOrder();
+    //updateUser();
     getOrder();
+    //getUser();
 }
 
 

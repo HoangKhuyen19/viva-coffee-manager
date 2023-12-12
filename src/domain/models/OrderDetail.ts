@@ -17,6 +17,15 @@ export default class OrderDetail{
     }
 
     //Methods:
+    public totalPriceCalculate() : number{
+        if(this.amount && this.product && this.product.Price){
+            return  this.amount * this.product.Price;
+        }else{
+            return 0;
+        }
+    }
+
+    //Getter setter
     public get OrderId(): Order | undefined{
         return this.orderId;
     }

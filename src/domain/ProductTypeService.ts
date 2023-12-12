@@ -1,4 +1,4 @@
-import IProductTypeDBHandler from "../persistent/interfaces/IProductTypeDBHandler";
+    import IProductTypeDBHandler from "../persistent/interfaces/IProductTypeDBHandler";
 import { IProductTypeService } from "./interfaces/IProductTypeService";
 import IProductService from "./interfaces/IProductService";
 import { ProductTypeDBHandler } from "../persistent/dbhandlers/ProductTypeDBHandler";
@@ -160,5 +160,14 @@ export class ProductTypeService implements IProductTypeService {
 
         //Return
         return result;
+    }
+
+    //Getter setter
+    public get ProductService(): IProductService | undefined {
+        return this.productService;
+    }
+
+    public set ProductService(productService: IProductService | undefined) {
+        this.productService = productService;
     }
 }

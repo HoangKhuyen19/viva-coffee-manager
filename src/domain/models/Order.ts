@@ -19,6 +19,17 @@ export default class Order{
     }
 
     //Methods:
+    public toltalPriceCalculate(orderDetails : OrderDetail[]):number{
+        let toltal = 0;
+
+        for(const orderDetail of orderDetails){
+            toltal += orderDetail.totalPriceCalculate();
+        }
+
+        return toltal;
+    }
+
+    //Getter setter
     public get Id(): string | undefined{
         return this.id;
     }

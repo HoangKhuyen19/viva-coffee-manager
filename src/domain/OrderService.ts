@@ -181,4 +181,21 @@ export default class OrderService implements IOderService {
         //Return
         return result;
     }
+
+    //Getter setter
+    public get OrderDetailService(): IOrderDetailService|undefined{
+        return this.orderDetailService;
+    }
+
+    public set OrderDetailService(orderDetailService: IOrderDetailService|undefined){
+        this.orderDetailService = orderDetailService;
+    }
+
+    public get UserService(): IUserService|undefined{
+        return this.userService;
+    }
+
+    public set UserService(userService: IUserService|undefined){
+        this.userService = userService;
+    }
 }

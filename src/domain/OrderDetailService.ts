@@ -174,4 +174,21 @@ export default class OrderDetailService implements IOrderDetailService{
             totalPrice: orderDetail.TotalPrice as number
         }
     }
+
+    //Getter setter
+    public get OrderService(): IOrderService|undefined {
+        return this.orderService;
+    }
+
+    public set OrderService(orderService: IOrderService|undefined) {
+        this.orderService = orderService;
+    }
+
+    public get ProductService(): IProductService|undefined {
+        return this.productService;
+    }
+
+    public set ProductService(productService: IProductService|undefined) {
+        this.productService = productService;
+    }
 }

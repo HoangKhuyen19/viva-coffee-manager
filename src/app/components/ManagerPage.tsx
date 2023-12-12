@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import ProductTypeManager from "./ProductTypeManager";
 import OrderManager from "./OrderManager";
 import AccountPageManager from "./AccountManager";
 import ProductManager from "./ProductManager";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faList, faBook, faMugHot, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { ProductTypeManager } from "./ProductTypeManager";
 
 //Type Tab
 type Tab = "ProductTypeManager" | "ProductManager" | "AccountManager" | "OrderManager" | null;
@@ -14,8 +14,12 @@ export default function ManagerPage() {
     //States:
     const [user, setUser] = useState({ fullName: "", permission: "" })
     const [selectedTab, setSelectedTab] = useState<Tab>(null);
-    // const [isImageVisible,setImageVisible] = useState(true);
+    
 
+    //Function:
+
+
+    
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
         setSelectedTab(tab)
@@ -100,7 +104,7 @@ export default function ManagerPage() {
             {/* Right-content */}
             <div className="div-content-right">
                 {selectedTab === null && <div className="img"> </div>}
-                {selectedTab === "ProductTypeManager" && <ProductTypeManager />}
+                {selectedTab === "ProductTypeManager" && <ProductTypeManager/>}
                 {selectedTab === "ProductManager" && <ProductManager />}
                 {selectedTab === "AccountManager" && <AccountPageManager />}
                 {selectedTab === "OrderManager" && <OrderManager />}
