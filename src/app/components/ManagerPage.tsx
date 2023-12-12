@@ -44,7 +44,7 @@ export default function ManagerPage() {
             <div className="div-content-left">
                 {/* Header */}
                 <div className="div-header" >
-                    <label className="viva" onClick={() => handlerTabClick(null)}>Viva Coffee </label>
+                    <label className="viva" onClick={() => handlerTabClick(null)}>Viva Coffee Manager </label>
 
                 </div>
                 <div className="div-user">
