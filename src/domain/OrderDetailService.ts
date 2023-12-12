@@ -1,9 +1,9 @@
-import IOderDetailDBHandler from "@/persistent/interfaces/IOderDetailDBHandler";
+import IOderDetailDBHandler from "../persistent/interfaces/IOderDetailDBHandler";
 import IOrderDetailService from "./interfaces/IOrderDetailService";
 import OrderDetail from "./models/OrderDetail";
-import { OrderDetailDBHandler } from "@/persistent/dbhandlers/OrderDetailDBHandler";
+import { OrderDetailDBHandler } from "../persistent/dbhandlers/OrderDetailDBHandler";
 import IOrderService from "./interfaces/IOrderService";
-import { OrderDetailData } from "@/persistent/dtos/OrderDetailData";
+import { OrderDetailData } from "../persistent/dtos/OrderDetailData";
 import IProductService from "./interfaces/IProductService";
 
 export default class OrderDetailService implements IOrderDetailService{
@@ -42,19 +42,70 @@ export default class OrderDetailService implements IOrderDetailService{
         return orderDetail;
     }
     async getAll(): Promise<OrderDetail[]> {
-        throw new Error("Method not implemented.");
+        //try getting datas
+        try {
+            var datas : OrderDetailData[] = await this.orderDetailDBHandler.getAll();
+        }catch(error) {
+            throw error;
+        }
+
+        //Try converting
+        try {
+            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas);
+        }catch(error) {
+            throw error;
+        }
+
+        //Return
+        return orderDetails;
     }
     async getByFilter(filter: any): Promise<OrderDetail[]> {
-        throw new Error("Method not implemented.");
+        //Try getting datas
+        try {
+            var datas : OrderDetailData[] = await this.orderDetailDBHandler.getByFilter(filter);
+        }catch(error) {
+            throw error;
+        }
+
+        //Try converting
+        try {
+            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas);
+        }catch(error) {
+            throw error;
+        }
+
+        //Return
+        return orderDetails;
     }
     async insert(target: OrderDetail): Promise<void> {
-        throw new Error("Method not implemented.");
+        //Try converting
+        const data : OrderDetailData = await this.orderDetailToData(target);
+        
+        //Try inserting
+        try {
+            await this.orderDetailDBHandler.insert(data);
+        } catch (error) {
+            throw error;
+        }
     }
     async update(target: OrderDetail): Promise<void> {
-        throw new Error("Method not implemented.");
+        //Try converting
+        const data: OrderDetailData = await this.orderDetailToData(target);
+
+        //Try updating
+        try {
+            await this.orderDetailDBHandler.update(data);
+        } catch (error) {
+            throw error;
+        }
     }
     async delete(filter: any): Promise<void> {
-        throw new Error("Method not implemented.");
+        //Try deleting
+        try {
+            await this.orderDetailDBHandler.delete(filter);
+        } catch (error) {
+            throw error;
+        }
     }
 
     //Local methods

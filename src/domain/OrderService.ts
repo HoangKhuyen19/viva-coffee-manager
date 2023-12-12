@@ -1,9 +1,9 @@
-import IOderDBHandler from "@/persistent/interfaces/IOrderDBHandler";
+import IOderDBHandler from "../persistent/interfaces/IOrderDBHandler";
 import IOderService from "./interfaces/IOrderService";
 import Order from "./models/Order";
-import { OrderData } from "@/persistent/dtos/OrderData";
+import { OrderData } from "../persistent/dtos/OrderData";
 import IOrderDetailService from "./interfaces/IOrderDetailService";
-import { OrderDBHandler } from "@/persistent/dbhandlers/OrderDBHandler";
+import { OrderDBHandler } from "../persistent/dbhandlers/OrderDBHandler";
 import IUserService from "./interfaces/IUserService";
 
 export default class OrderService implements IOderService {
@@ -13,10 +13,10 @@ export default class OrderService implements IOderService {
     private userService?: IUserService;
 
     //Constructor
-    public constructor(orderDetailService?: IOrderDetailService, userService?: IUserService) {
+    public constructor(userService?: IUserService,orderDetailService?: IOrderDetailService, ) {
         this.orderDBHandler = new OrderDBHandler();
-        this.orderDetailService = orderDetailService;
         this.userService = userService;
+        this.orderDetailService = orderDetailService;
     }
 
     //Methods
@@ -154,7 +154,7 @@ export default class OrderService implements IOderService {
         try {
             //Created By
             if(data.createdBy){
-                await getUser(data.id, order);
+                await getUser(data.createdBy, order);
             }
 
             //Order detail list

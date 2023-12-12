@@ -36,24 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductService = void 0;
-var ProductDBHandler_1 = require("../persistent/dbhandlers/ProductDBHandler");
-var Product_1 = require("./models/Product");
-var ProductService = /** @class */ (function () {
-    //Constructor
-    function ProductService(productTypeService) {
-        this.productDBHandler = new ProductDBHandler_1.ProductDBHandler();
-        this.productTypeService = productTypeService;
+var OrderDetail_1 = require("./models/OrderDetail");
+var OrderDetailDBHandler_1 = require("../persistent/dbhandlers/OrderDetailDBHandler");
+var OrderDetailService = /** @class */ (function () {
+    //Constructor:
+    function OrderDetailService(orderService, productService) {
+        this.orderDetailDBHandler = new OrderDetailDBHandler_1.OrderDetailDBHandler();
+        this.orderService = orderService;
+        this.productService = productService;
     }
-    //Methods:
-    ProductService.prototype.get = function (id) {
+    OrderDetailService.prototype.get = function (orderId, product) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, error_1, product, error_2;
+            var data, error_1, orderDetail, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.productDBHandler.get(id)];
+                        return [4 /*yield*/, this.orderDetailDBHandler.get(orderId, product)];
                     case 1:
                         data = _a.sent();
                         return [3 /*break*/, 3];
@@ -68,28 +67,28 @@ var ProductService = /** @class */ (function () {
                         _a.label = 4;
                     case 4:
                         _a.trys.push([4, 6, , 7]);
-                        return [4 /*yield*/, this.dataToProduct(data)];
+                        return [4 /*yield*/, this.dataToOrderDetail(data)];
                     case 5:
-                        product = _a.sent();
+                        orderDetail = _a.sent();
                         return [3 /*break*/, 7];
                     case 6:
                         error_2 = _a.sent();
                         throw error_2;
                     case 7: 
                     //Return
-                    return [2 /*return*/, product];
+                    return [2 /*return*/, orderDetail];
                 }
             });
         });
     };
-    ProductService.prototype.getAll = function () {
+    OrderDetailService.prototype.getAll = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var datas, error_3, products, error_4;
+            var datas, error_3, orderDetails, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.productDBHandler.getAll()];
+                        return [4 /*yield*/, this.orderDetailDBHandler.getAll()];
                     case 1:
                         datas = _a.sent();
                         return [3 /*break*/, 3];
@@ -98,28 +97,28 @@ var ProductService = /** @class */ (function () {
                         throw error_3;
                     case 3:
                         _a.trys.push([3, 5, , 6]);
-                        return [4 /*yield*/, this.multiDataToProduct(datas)];
+                        return [4 /*yield*/, this.multiDataToOrderDetail(datas)];
                     case 4:
-                        products = _a.sent();
+                        orderDetails = _a.sent();
                         return [3 /*break*/, 6];
                     case 5:
                         error_4 = _a.sent();
                         throw error_4;
                     case 6: 
                     //Return
-                    return [2 /*return*/, products];
+                    return [2 /*return*/, orderDetails];
                 }
             });
         });
     };
-    ProductService.prototype.getByFilter = function (filter) {
+    OrderDetailService.prototype.getByFilter = function (filter) {
         return __awaiter(this, void 0, void 0, function () {
-            var datas, error_5, products, error_6;
+            var datas, error_5, orderDetails, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.productDBHandler.getByFilter(filter)];
+                        return [4 /*yield*/, this.orderDetailDBHandler.getByFilter(filter)];
                     case 1:
                         datas = _a.sent();
                         return [3 /*break*/, 3];
@@ -128,72 +127,74 @@ var ProductService = /** @class */ (function () {
                         throw error_5;
                     case 3:
                         _a.trys.push([3, 5, , 6]);
-                        return [4 /*yield*/, this.multiDataToProduct(datas)];
+                        return [4 /*yield*/, this.multiDataToOrderDetail(datas)];
                     case 4:
-                        products = _a.sent();
+                        orderDetails = _a.sent();
                         return [3 /*break*/, 6];
                     case 5:
                         error_6 = _a.sent();
                         throw error_6;
                     case 6: 
                     //Return
-                    return [2 /*return*/, products];
+                    return [2 /*return*/, orderDetails];
                 }
             });
         });
     };
-    ProductService.prototype.insert = function (product) {
+    OrderDetailService.prototype.insert = function (target) {
         return __awaiter(this, void 0, void 0, function () {
-            var productData, error_7;
+            var data, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        productData = this.productToData(product);
-                        _a.label = 1;
+                    case 0: return [4 /*yield*/, this.orderDetailToData(target)];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.productDBHandler.insert(productData)];
+                        data = _a.sent();
+                        _a.label = 2;
                     case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, this.orderDetailDBHandler.insert(data)];
                     case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
                         error_7 = _a.sent();
                         throw error_7;
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    ProductService.prototype.update = function (product) {
+    OrderDetailService.prototype.update = function (target) {
         return __awaiter(this, void 0, void 0, function () {
-            var productData, error_8;
+            var data, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        productData = this.productToData(product);
-                        _a.label = 1;
+                    case 0: return [4 /*yield*/, this.orderDetailToData(target)];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.productDBHandler.update(productData)];
+                        data = _a.sent();
+                        _a.label = 2;
                     case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, this.orderDetailDBHandler.update(data)];
                     case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
                         error_8 = _a.sent();
                         throw error_8;
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    ProductService.prototype.delete = function (filter) {
+    OrderDetailService.prototype.delete = function (filter) {
         return __awaiter(this, void 0, void 0, function () {
             var error_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.productDBHandler.delete(filter)];
+                        return [4 /*yield*/, this.orderDetailDBHandler.delete(filter)];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
@@ -205,66 +206,88 @@ var ProductService = /** @class */ (function () {
             });
         });
     };
-    //Local methods:
-    ProductService.prototype.productToData = function (product) {
-        return {
-            id: product.Id,
-            name: product.Name,
-            type: (product.Type ? product.Type.Id : undefined),
-            price: product.Price,
-            description: product.Description
-        };
-    };
-    ProductService.prototype.dataToProduct = function (data) {
+    //Local methods
+    OrderDetailService.prototype.dataToOrderDetail = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            function getProductType(id, product) {
+            //Function 
+            function getOrder(id, orderDetail) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var _a, error_10;
+                    var _a, error_11;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
-                                _b.trys.push([0, 3, , 4]);
-                                if (!seft.productTypeService) return [3 /*break*/, 2];
-                                _a = product;
-                                return [4 /*yield*/, seft.productTypeService.get(id)];
+                                if (!seft.orderService) return [3 /*break*/, 4];
+                                _b.label = 1;
                             case 1:
-                                _a.Type = _b.sent();
-                                _b.label = 2;
-                            case 2: return [3 /*break*/, 4];
+                                _b.trys.push([1, 3, , 4]);
+                                _a = orderDetail;
+                                return [4 /*yield*/, seft.orderService.get(id)];
+                            case 2:
+                                _a.OrderId = _b.sent();
+                                return [3 /*break*/, 4];
                             case 3:
-                                error_10 = _b.sent();
-                                throw error_10;
+                                error_11 = _b.sent();
+                                throw error_11;
                             case 4: return [2 /*return*/];
                         }
                     });
                 });
             }
-            var seft, product;
+            function getProduct(id, orderDetail) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var _a, error_12;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                if (!seft.productService) return [3 /*break*/, 4];
+                                _b.label = 1;
+                            case 1:
+                                _b.trys.push([1, 3, , 4]);
+                                _a = orderDetail;
+                                return [4 /*yield*/, seft.productService.get(id)];
+                            case 2:
+                                _a.Product = _b.sent();
+                                return [3 /*break*/, 4];
+                            case 3:
+                                error_12 = _b.sent();
+                                throw error_12;
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                });
+            }
+            var seft, orderDetail, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         seft = this;
-                        product = new Product_1.default();
-                        //Copy fields:
-                        product.Id = data.id;
-                        product.Name = data.name;
-                        product.Price = data.price;
-                        product.Description = data.description;
-                        if (!data.type) return [3 /*break*/, 2];
-                        return [4 /*yield*/, getProductType(data.type, product)];
+                        orderDetail = new OrderDetail_1.default();
+                        //copy files:
+                        orderDetail.Amount = data.amount;
+                        orderDetail.TotalPrice = data.totalPrice;
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, getOrder(data.orderId, orderDetail)];
+                    case 2:
                         _a.sent();
-                        _a.label = 2;
-                    case 2: 
-                    //Return product
-                    return [2 /*return*/, product];
+                        return [4 /*yield*/, getProduct(data.product, orderDetail)];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_10 = _a.sent();
+                        throw error_10;
+                    case 5: 
+                    //Return
+                    return [2 /*return*/, orderDetail];
                 }
             });
         });
     };
-    ProductService.prototype.multiDataToProduct = function (datas) {
+    OrderDetailService.prototype.multiDataToOrderDetail = function (datas) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, _i, datas_1, data, _a, _b, error_11;
+            var result, _i, datas_1, data, _a, _b, error_13;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -278,7 +301,7 @@ var ProductService = /** @class */ (function () {
                         if (!(_i < datas_1.length)) return [3 /*break*/, 5];
                         data = datas_1[_i];
                         _b = (_a = result).push;
-                        return [4 /*yield*/, this.dataToProduct(data)];
+                        return [4 /*yield*/, this.dataToOrderDetail(data)];
                     case 3:
                         _b.apply(_a, [_c.sent()]);
                         _c.label = 4;
@@ -287,8 +310,8 @@ var ProductService = /** @class */ (function () {
                         return [3 /*break*/, 2];
                     case 5: return [3 /*break*/, 7];
                     case 6:
-                        error_11 = _c.sent();
-                        throw error_11;
+                        error_13 = _c.sent();
+                        throw error_13;
                     case 7: 
                     //Return
                     return [2 /*return*/, result];
@@ -296,6 +319,15 @@ var ProductService = /** @class */ (function () {
             });
         });
     };
-    return ProductService;
+    OrderDetailService.prototype.orderDetailToData = function (orderDetail) {
+        var _a, _b;
+        return {
+            orderId: (_a = orderDetail.OrderId) === null || _a === void 0 ? void 0 : _a.Id,
+            product: (_b = orderDetail.Product) === null || _b === void 0 ? void 0 : _b.Id,
+            amount: orderDetail.Amount,
+            totalPrice: orderDetail.TotalPrice
+        };
+    };
+    return OrderDetailService;
 }());
-exports.ProductService = ProductService;
+exports.default = OrderDetailService;

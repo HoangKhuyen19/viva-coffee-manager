@@ -144,22 +144,64 @@ var ProductTypeService = /** @class */ (function () {
     };
     ProductTypeService.prototype.insert = function (productType) {
         return __awaiter(this, void 0, void 0, function () {
+            var productTypeData, error_7;
             return __generator(this, function (_a) {
-                throw new Error("Method not implemented.");
+                switch (_a.label) {
+                    case 0:
+                        productTypeData = this.productTypeToData(productType);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.productTypeDBHandler.insert(productTypeData)];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_7 = _a.sent();
+                        throw error_7;
+                    case 4: return [2 /*return*/];
+                }
             });
         });
     };
     ProductTypeService.prototype.update = function (productType) {
         return __awaiter(this, void 0, void 0, function () {
+            var productTypeData, error_8;
             return __generator(this, function (_a) {
-                throw new Error("Method not implemented.");
+                switch (_a.label) {
+                    case 0:
+                        productTypeData = this.productTypeToData(productType);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.productTypeDBHandler.update(productTypeData)];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_8 = _a.sent();
+                        throw error_8;
+                    case 4: return [2 /*return*/];
+                }
             });
         });
     };
     ProductTypeService.prototype.delete = function (filter) {
         return __awaiter(this, void 0, void 0, function () {
+            var error_9;
             return __generator(this, function (_a) {
-                throw new Error("Method not implemented.");
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.productTypeDBHandler.delete(filter)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_9 = _a.sent();
+                        throw error_9;
+                    case 3: return [2 /*return*/];
+                }
             });
         });
     };
@@ -172,29 +214,31 @@ var ProductTypeService = /** @class */ (function () {
     };
     ProductTypeService.prototype.dataToProductType = function (data) {
         return __awaiter(this, void 0, void 0, function () {
+            //Function get product list
             function getProducts(id, productT) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var _a, error_7;
+                    var _a, error_11;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
-                                _b.trys.push([0, 3, , 4]);
-                                if (!seft.productService) return [3 /*break*/, 2];
+                                if (!seft.productService) return [3 /*break*/, 4];
+                                _b.label = 1;
+                            case 1:
+                                _b.trys.push([1, 3, , 4]);
                                 _a = productT;
                                 return [4 /*yield*/, seft.productService.getByFilter({ type: id })];
-                            case 1:
+                            case 2:
                                 _a.Products = _b.sent();
-                                _b.label = 2;
-                            case 2: return [3 /*break*/, 4];
+                                return [3 /*break*/, 4];
                             case 3:
-                                error_7 = _b.sent();
-                                throw error_7;
+                                error_11 = _b.sent();
+                                throw error_11;
                             case 4: return [2 /*return*/];
                         }
                     });
                 });
             }
-            var seft, productType;
+            var seft, productType, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -203,18 +247,26 @@ var ProductTypeService = /** @class */ (function () {
                         //Copy fields:
                         productType.Id = data.id;
                         productType.Name = data.name;
-                        return [4 /*yield*/, getProducts(data.id, productType)];
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, getProducts(data.id, productType)];
+                    case 2:
                         _a.sent();
-                        //Return product
-                        return [2 /*return*/, productType];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_10 = _a.sent();
+                        throw error_10;
+                    case 4: 
+                    //Return product
+                    return [2 /*return*/, productType];
                 }
             });
         });
     };
     ProductTypeService.prototype.multiDataToProductType = function (datas) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, _i, datas_1, data, _a, _b, error_8;
+            var result, _i, datas_1, data, _a, _b, error_12;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -237,8 +289,8 @@ var ProductTypeService = /** @class */ (function () {
                         return [3 /*break*/, 2];
                     case 5: return [3 /*break*/, 7];
                     case 6:
-                        error_8 = _c.sent();
-                        throw error_8;
+                        error_12 = _c.sent();
+                        throw error_12;
                     case 7: 
                     //Return
                     return [2 /*return*/, result];
