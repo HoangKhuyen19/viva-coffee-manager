@@ -37,7 +37,7 @@ function LoginForm({onLogin} : LoginFormProps) {
     return (
         <div>
             <div  className="login-container">
-                <h1 className="title">Viva Coffee</h1>
+                <h1 className="title">Viva Coffee Manager</h1>
                 <div className="login-box">
                     <div className="login-div-left">
                     </div>
