@@ -18,7 +18,7 @@ export default class OrderDetailService implements IOrderDetailService{
         this.productService = productService;
     }
 
-    async get(orderId: string, product: string): Promise<OrderDetail|undefined> {
+    async get(orderId: string, product: string, path: any[]): Promise<OrderDetail|undefined> {
         //Try getting data  
         try {
             var data : OrderDetailData | undefined = await this.orderDetailDBHandler.get(orderId, product);
@@ -33,7 +33,7 @@ export default class OrderDetailService implements IOrderDetailService{
 
         //Try converting data
         try {
-            var orderDetail: OrderDetail = await this.dataToOrderDetail(data);
+            var orderDetail: OrderDetail = await this.dataToOrderDetail(data, path);
         } catch (error) {
             throw error;
         }
@@ -41,7 +41,7 @@ export default class OrderDetailService implements IOrderDetailService{
         //Return
         return orderDetail;
     }
-    async getAll(): Promise<OrderDetail[]> {
+    async getAll(path : any[]): Promise<OrderDetail[]> {
         //try getting datas
         try {
             var datas : OrderDetailData[] = await this.orderDetailDBHandler.getAll();
@@ -51,7 +51,7 @@ export default class OrderDetailService implements IOrderDetailService{
 
         //Try converting
         try {
-            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas);
+            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas, path);
         }catch(error) {
             throw error;
         }
@@ -59,7 +59,7 @@ export default class OrderDetailService implements IOrderDetailService{
         //Return
         return orderDetails;
     }
-    async getByFilter(filter: any): Promise<OrderDetail[]> {
+    async getByFilter(filter: any, path: any[]): Promise<OrderDetail[]> {
         //Try getting datas
         try {
             var datas : OrderDetailData[] = await this.orderDetailDBHandler.getByFilter(filter);
@@ -69,7 +69,7 @@ export default class OrderDetailService implements IOrderDetailService{
 
         //Try converting
         try {
-            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas);
+            var orderDetails : OrderDetail[] = await this.multiDataToOrderDetail(datas,path);
         }catch(error) {
             throw error;
         }
@@ -109,39 +109,65 @@ export default class OrderDetailService implements IOrderDetailService{
     }
 
     //Local methods
-    private async dataToOrderDetail(data: OrderDetailData): Promise<OrderDetail> {
+    private async dataToOrderDetail(data: OrderDetailData, path: any[]): Promise<OrderDetail> {
+        //Seft difinition
         const seft : OrderDetailService = this;
 
-        const orderDetail: OrderDetail = new OrderDetail();
+        //Local function
+        function precheck(orderId: string, product: string, path: any[]) : OrderDetail|undefined{
+            for(const obj of path){
+                if(obj instanceof OrderDetail){
+                    if(obj.OrderId?.Id === orderId && obj.Product?.Id === product){
+                        return obj;
+                    }
+                }
+            }
+        }
 
-        //Function 
-        async function getOrder(id: string, orderDetail: OrderDetail): Promise<void> {
+        async function getOrder(id: string, orderDetail: OrderDetail, path: any[]): Promise<void> {
             if (seft.orderService) {
                 try {
-                    orderDetail.OrderId = await seft.orderService.get(id);
+                    orderDetail.OrderId = await seft.orderService.get(id, path);
                 } catch (error) {
                     throw error;
                 }
             }
         }
 
-        async function  getProduct(id: string, orderDetail: OrderDetail): Promise<void> {
+        async function  getProduct(id: string, orderDetail: OrderDetail, path: any[]): Promise<void> {
             if (seft.productService) {
                 try {
-                    orderDetail.Product = await seft.productService.get(id);
+                    orderDetail.Product = await seft.productService.get(id, path);
                 } catch (error) {
                     throw error;
                 }
             }
         }
+        
+        //OrderDetail declaration
+        let orderDetail: OrderDetail | undefined;
+
+        //OrderDeatail precheck
+        orderDetail = precheck(data.orderId, data.product,path);
+        
+        //Return if not found in path
+        if(orderDetail){
+            return orderDetail;
+        }
+
+        //Try converting if not found in path
+        orderDetail = new OrderDetail();
 
         //copy files:
         orderDetail.Amount = data.amount;
         orderDetail.TotalPrice = data.totalPrice;
+
+        //Path pushing
+        path.push(orderDetail);
         
         try {
-            await getOrder(data.orderId, orderDetail);
-            await getProduct(data.product, orderDetail);    
+            await getOrder(data.orderId, orderDetail,path);
+            await getProduct(data.product, orderDetail, path);    
         } catch (error) {
             throw error;
         }
@@ -150,13 +176,13 @@ export default class OrderDetailService implements IOrderDetailService{
         return orderDetail
     }
 
-    private async multiDataToOrderDetail(datas: OrderDetailData[]): Promise<OrderDetail[]> {
+    private async multiDataToOrderDetail(datas: OrderDetailData[], path: any[]): Promise<OrderDetail[]> {
         const result: OrderDetail[] = [];
 
         //Try converting
         try {
             for (const data of datas) {
-                result.push(await this.dataToOrderDetail(data));
+                result.push(await this.dataToOrderDetail(data, path));
             }
         }catch (error) {
             throw error;

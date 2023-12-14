@@ -2,6 +2,7 @@
 import {useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
 import ManagerPage from "./components/ManagerPage";
+import User from "./interfaces/User";
 
 function MainPage() {
     //States:
@@ -36,12 +37,13 @@ function MainPage() {
             );
 
             //Parse response body to json:
-            const { success, message, user }: any = await response.json();
+            const { success, message, user }: {success:boolean,message: string, user : User} = await response.json();
 
             //Login successfully
             if (success) {
                 //Save user to sessionStorage
                 sessionStorage.setItem("user", JSON.stringify({
+                    username: user.username,
                     fullName: user.fullName,
                     permission: user.permission
                 }));
@@ -68,11 +70,6 @@ function MainPage() {
             </div>
         )
     }
-
-
-
-
-
 }
 
 export default MainPage;

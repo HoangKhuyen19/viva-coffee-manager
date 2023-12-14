@@ -3,10 +3,10 @@ import IProductService from "./interfaces/IProductService";
 import Product from "./models/Product";
 import { ProductData } from "../persistent/dtos/ProductData";
 import IProductDBHandler from "../persistent/interfaces/IProductDBHandler";
-import { IProductTypeService } from "./interfaces/IProductTypeService";
+import IProductTypeService from "./interfaces/IProductTypeService";
 
 
-export class ProductService implements IProductService{
+class ProductService implements IProductService{
     //Fields:
     private productDBHandler: IProductDBHandler;
     private productTypeService?: IProductTypeService;
@@ -17,7 +17,7 @@ export class ProductService implements IProductService{
     }
 
     //Methods:
-    async get(id: string): Promise<Product | undefined> {
+    async get(id: string, path : any[]): Promise<Product | undefined> {
         //Try getting data
         try {
             var data : ProductData|undefined = await this.productDBHandler.get(id);
@@ -32,7 +32,7 @@ export class ProductService implements IProductService{
         
         //Try converting data
         try {
-            var product : Product = await this.dataToProduct(data);
+            var product : Product = await this.dataToProduct(data, path);
         } catch (error) {
             throw error;
         }
@@ -40,7 +40,7 @@ export class ProductService implements IProductService{
         //Return
         return product;
     }
-    async getAll(): Promise<Product[]> {
+    async getAll(path : any[]): Promise<Product[]> {
         //trying getting datas
         try {
             var datas : ProductData[] = await this.productDBHandler.getAll();
@@ -50,7 +50,7 @@ export class ProductService implements IProductService{
 
         //Try converting datas to products
         try {
-            var products : Product[] = await this.multiDataToProduct(datas);
+            var products : Product[] = await this.multiDataToProduct(datas, path);
         } catch (error) {
             throw error;
         }
@@ -58,7 +58,7 @@ export class ProductService implements IProductService{
         //Return
         return products;
     }
-    async getByFilter(filter: any): Promise<Product[]> {
+    async getByFilter(filter: any, path : any): Promise<Product[]> {
         //trying getting datas
         try {
             var datas : ProductData[] = await this.productDBHandler.getByFilter(filter);
@@ -68,7 +68,7 @@ export class ProductService implements IProductService{
 
         //Try converting datas to products
         try {
-            var products : Product[] = await this.multiDataToProduct(datas);
+            var products : Product[] = await this.multiDataToProduct(datas, path);
         } catch (error) {
             throw error;
         }
@@ -117,14 +117,25 @@ export class ProductService implements IProductService{
         }
     }
 
-    private async dataToProduct(data: ProductData) : Promise<Product>{
+    private async dataToProduct(data: ProductData, path: any[]) : Promise<Product>{
         //Function getProduct Type
         const seft: ProductService = this;
 
-        async function getProductType(id:string, product: Product) : Promise<void>{
+        //Local function:
+        function precheck(id: string, path : any[]) : Product|undefined{
+            for(const obj of path){
+                if(obj instanceof Product){
+                    if(obj.Id === id){
+                        return obj;
+                    }
+                }
+            }
+        }
+
+        async function getProductType(id:string, product: Product, path : any[]) : Promise<void>{
             try {
                 if(seft.productTypeService){
-                    product.Type = await seft.productTypeService.get(id);
+                    product.Type = await seft.productTypeService.get(id, path);
                 }
             } catch (error) {
                 throw error;
@@ -132,29 +143,45 @@ export class ProductService implements IProductService{
             
         }
 
-        let product : Product = new Product();
+        //Product declaration
+        let product : Product | undefined;
+
+        //Product precheck
+        product = precheck(data.id, path);
+
+        //Return if found product in path
+        if(product){
+            return product;
+        }
+
+        //Try converting if not found in path
+        product = new Product();
 
         //Copy fields:
         product.Id = data.id;
         product.Name = data.name;
         product.Price = data.price;
         product.Description = data.description;
+
+        //Path pushing
+        path.push(product);
         
+        //Dependency handling
         if(data.type){
-            await getProductType(data.type,product);
+            await getProductType(data.type,product,path);
         }
 
         //Return product
         return product;
     }
     
-    private async multiDataToProduct(datas: ProductData[]) : Promise<Product[]>{
+    private async multiDataToProduct(datas: ProductData[], path: any[]) : Promise<Product[]>{
         const result : Product[] = [];
 
         //Try converting
         try {
             for(const data of datas){
-                result.push(await this.dataToProduct(data))
+                result.push(await this.dataToProduct(data, path))
             }
         } catch (error) {
             throw error;
@@ -173,3 +200,5 @@ export class ProductService implements IProductService{
         this.productTypeService = productTypeService;
     }
 }
+
+export default ProductService;

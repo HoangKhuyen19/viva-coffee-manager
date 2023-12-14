@@ -7,7 +7,7 @@ import IOrderService from "./interfaces/IOrderService";
 
 
 
-export class UserService implements IUserService {
+export default class UserService implements IUserService {
     //Fields:
     private userDBHandler: IUserDBHandler;
     private orderService?: IOrderService;
@@ -17,7 +17,9 @@ export class UserService implements IUserService {
         this.userDBHandler = new UserDBHandler();
         this.orderService = orderService;
     }
-    async getByFilter(filter: any): Promise<User[]> {
+
+    //Methods:
+    async getByFilter(filter: any, path: any[]): Promise<User[]> {
         //Try getting data
         try {
             var usersData = await this.userDBHandler.getByFilter(filter);
@@ -27,7 +29,7 @@ export class UserService implements IUserService {
 
         //Try converting
         try {
-            var users = await this.multiDataToUser(usersData);
+            var users = await this.multiDataToUser(usersData, path);
         } catch (error) {
             throw error;
         }
@@ -35,9 +37,7 @@ export class UserService implements IUserService {
         //Return
         return users;
     }
-
-    //Methods:
-    async get(username: string): Promise<User | undefined> {
+    async get(username: string, path: any[]): Promise<User | undefined> {
         //Try getting data
         try {
             var userData: UserData | undefined = await this.userDBHandler.get(username);
@@ -52,7 +52,7 @@ export class UserService implements IUserService {
 
         //Try converting
         try {
-            var user: User = await this.dataToUser(userData);
+            var user: User = await this.dataToUser(userData, path);
         } catch (error) {
             throw error
         }
@@ -61,7 +61,7 @@ export class UserService implements IUserService {
         return user;
     }
 
-    async getAll(): Promise<User[]> {
+    async getAll(path : any[]): Promise<User[]> {
         //Try getting data
         try {
             var usersData = await this.userDBHandler.getAll();
@@ -71,7 +71,7 @@ export class UserService implements IUserService {
 
         //Converting
         try {
-            var users: User[] = await this.multiDataToUser(usersData);
+            var users: User[] = await this.multiDataToUser(usersData, path);
         } catch (error) {
             throw error;
         }
@@ -122,22 +122,45 @@ export class UserService implements IUserService {
             permission: user.Permission as string
         }
     }
-    private async dataToUser(data: UserData): Promise<User> {
+    private async dataToUser(data: UserData, path: any[]): Promise<User> {
+        //Seft definition:
         const seft: UserService = this;
 
+        //Local function
+        function precheck(username: string, path: any[]): User | undefined {
+            for (const obj of path) {
+                if (obj instanceof User) {
+                    if (obj.Username === username) {
+                        return obj;
+                    }
+                }
+            }
+        }
 
-        async function getOrders(username: string, userT: User): Promise<void> {
+        async function getOrders(username: string, userT: User, path: any[]): Promise<void> {
             if (seft.orderService) {
                 //Get order list of user
                 try {
-                    userT.Orders = await seft.orderService.getByFilter({createdBy:username});
+                    userT.Orders = await seft.orderService.getByFilter({ createdBy: username }, path);
                 } catch (error) {
                     throw error;
                 }
             }
         }
-        //user declaration
-        let user: User = new User();
+
+        //User declaration
+        let user: User | undefined;
+
+        //Path precheck
+        user = precheck(data.username, path);
+
+        //Return if found path 
+        if (user) {
+            return user;
+        }
+
+        //If not found user
+        user = new User();
 
         //Copy fields:
         user.Username = data.username;
@@ -145,22 +168,27 @@ export class UserService implements IUserService {
         user.FullName = data.fullName;
         user.Permission = data.permission as UserPermission;
 
+        //Push path
+        path.push(user);
+
+        //Dependencies handling
         try {
-            await getOrders(data.username, user);
+            await getOrders(data.username, user, path);
         } catch (error) {
             throw error
         }
+
         //Return
         return user;
     }
 
-    private async multiDataToUser(data: UserData[]): Promise<User[]> {
+    private async multiDataToUser(data: UserData[], path: any[]): Promise<User[]> {
         const result: User[] = [];
 
         //Try converting
         try {
             for (const UserData of data) {
-                result.push(await this.dataToUser(UserData));
+                result.push(await this.dataToUser(UserData, path));
             }
         } catch (error) {
             throw error;

@@ -1,22 +1,30 @@
-import { UserService } from "@/domain/UserService";
-import IUserService from "@/domain/interfaces/IUserService";
+import { userService } from "@/domain/ModelService";
 import User from "@/domain/models/User";
 import { NextRequest, NextResponse } from "next/server";
+import UserData from "./aliases";
 
 export async function POST(request : NextRequest) : Promise<NextResponse>{
     //Parse request to json():
     const parameter : any = await request.json();
-
+    
+    
     //Get username and password
     const username: string = parameter.username;
     const password:  string = parameter.password;
 
-    //User Service declaration
-    const userService : IUserService = new UserService();
-
     //Get user based on username
-    const user : User | undefined = await userService.get(username);
+    const path : any[] = [];
+    const user : User | undefined = await userService.get(username, path);
 
+    //Converting User to UserData
+    const userData : UserData = {
+        username : user?.Username as string,
+        fullName : user?.FullName as string,
+        permission : user?.Permission as string
+    }
+    
+       
+    
     //User not found case
     if(!user){
         return NextResponse.json({
@@ -35,8 +43,6 @@ export async function POST(request : NextRequest) : Promise<NextResponse>{
 
     return NextResponse.json({
         success: true,
-        user
+        user : userData
     });
-
-    
 }

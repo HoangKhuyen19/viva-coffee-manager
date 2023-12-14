@@ -1,95 +1,137 @@
-    import { useState } from "react";
-    import Search from "./Search";
-    import ProductType from "@/domain/models/ProductType";
+import { useEffect, useState } from "react";
+import { ProductTypeForm } from "./form/ProductTypeForm";
+import ProductType from "../interfaces/ProductType";
 
+export function ProductTypeManager() {
+    //States:
+    const [productTypeList, setProductTypeList] = useState<ProductType[]>([]);
 
-    //Interface:
-    export interface ProductTypeProps {
-        productTypeList: ProductType[];
+    //useEffect
+    useEffect(() => {
+        get()
+    },[])
+
+    //methods
+    async function get(): Promise<void> {
+        try {
+            var response: Response = await fetch("manager/product-type-manager");
+
+            //parse response's body to json
+            const { productTypes, success }: { productTypes: ProductType[], success: boolean } = await response.json();
+
+            //If get products successully
+            if (success) {
+                setProductTypeList(productTypes);
+            } else {
+                alert("Không thành công")
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    export function ProductTypeManager({ productTypeList }: ProductTypeProps) {
-        //States
-        const [isItemVisible, setItemVisible] = useState(false);
-
-
-        //Event handler
-        const showFormItem = () => {
-            setItemVisible(true); // Sửa thành true để hiển thị form
-        }
-
-        const closeFormItem = () => {
-            setItemVisible(false); // Sửa thành false để ẩn form
-        }
-        //View
-        return (
-            <div>
-                <div className="form-search">
-                    <label htmlFor="itemLabel">Loại sản phẩm: </label>
-                    <Search />
-
-                    <button className="btnitem" type="button" onClick={showFormItem}>Thêm</button>
-                </div>
-
-
-                {/* Table info product type */}
-                <table border={1} cellPadding={2} id="itemTable">
-                    <thead>
-                        <tr>
-                            <th>Mã loại sản phẩm</th>
-                            <th>Tên loại sản phẩm</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    async function onInsert(productType: ProductType): Promise<void> {
+        try {
+            //Sending HTTP Request 
+            var response: Response = await fetch(
+                "/manager/product-type-manager/add",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
                         {
-                            productTypeList.map((productType) => (
-                                <ProductTypeRow key={productType.Id} productType={productType} />
-                            ))
+                            id: productType.id,
+                            name: productType.name
                         }
-                    </tbody>
-                </table>
+                    )
+                }
+            )
 
-                {/* Form add product type */}
-                {isItemVisible && (
-                    <div className="from-add">
-                        <div className="container-itemPoduct">
-                            <form className="form-itemProduct">
-                                {/* Cancel */}
-                                <span className="close-btnitem" onClick={closeFormItem}>X</span>
-                                <h3>Loại sản phẩm</h3>
+            //parse response's body to json
+            const { success, message }: { success: boolean, message: string } = await response.json()
 
-                                {/* Product Type id */}
-                                <input className="itemProduct-id" type="text" placeholder="Mã loại" required /><br />
+            //If insert successfully
+            if (success) {
+                get();
+            } else {
+                //Insert failed
+                alert(message);
+            }
 
-                                {/* Product Type name */}
-                                <input className="itemProduct-name" type="text" placeholder="Tên loại" required /><br />
-
-                                {/* Submit */}
-                                <button className="button-itemProduct" type="submit">Thêm</button>
-                            </form>
-                        </div>
-                    </div>
-
-                )}
-            </div>
-        );
+        } catch (error) {
+            alert(" Có lỗi trong quá trình thêm loại sản phẩm");
+        }
     }
 
-    //Product Type Row
-    interface ProductTypeRowProps {
-        productType: ProductType;
+    async function onUpdate(productType: ProductType):Promise<void>{
+        try {   
+            //Try sending HTTP request
+            var response : Response = await fetch(
+                "/manager/product-type-manager/update",
+                {
+                    method : "POST",
+                    body : JSON.stringify(
+                        {
+                            id: productType.id,
+                            name: productType.name
+                        }
+                    )
+                }
+            );
+            
+            //parse response's body to json
+            const {success,message} : {success: boolean, message : string} = await response.json();
+
+            if(success){
+                get();
+            }else{
+                alert(message);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình cập nhật!");
+        }
     }
 
-    function ProductTypeRow({ productType }: ProductTypeRowProps) {
-        return (
-            <tr>
-                <td>{productType.Id}</td>
-                <td>{productType.Name}</td>
-                <td>
-                    <button className="button-update">Cập nhập</button>
-                    <button className="button-delete">Xóa</button>
-                </td>
-            </tr>
-        )
+    async function onDelete(productType:ProductType) : Promise<void>{
+        try {
+            //Sending http request
+            var response : Response = await fetch(`/manager/product-type-manager/delete?id=${productType.id}`);
+            
+            //Converting body
+            const {success, message} : {success: boolean, message: string} = await response.json();
+            console.log(success);
+            //If delete successfully
+            if(success){
+                get();
+            }else{
+                //If delete failed
+                alert(message);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình xoá");
+        }
     }
+
+    async function onSearch(keyword :string) : Promise<void>{
+        try {
+            //Try sending http request
+            var response : Response = await fetch(`/manager/product-type-manager/search?key=${keyword}`);
+            debugger;
+            //Parse response body to json 
+            const {success, message, productTypes} : {success: boolean, message: string, productTypes: ProductType[]} = await response.json();
+
+            //If search successfully
+            if(success){
+                setProductTypeList(productTypes);
+            }else{
+                alert(message)
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình tìm kiếm");
+        }
+    }
+    //Views:
+    return (
+        <ProductTypeForm productTypes={productTypeList} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch}/>
+        
+    )
+}

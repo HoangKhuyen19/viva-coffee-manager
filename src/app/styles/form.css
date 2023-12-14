@@ -40,6 +40,11 @@ td .delete{
 
 th{
     text-align: left;
+    color: black;
+}
+
+td{
+    color: black;
 }
 
 
