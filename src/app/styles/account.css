@@ -51,22 +51,14 @@
 
 
 /* Nút update ở cột trong bảng */
-.button-update{
+.button-update, .button-delete{
     background-color: rgb(222,184,135);
     border: 0px;
     border-radius: 4px;
     padding: 2px;
     width: 100px;
 }
-/* Nút xóa ở cột trong bảng */
-.button-delete {
-    background-color: rgb(222,184,135);
-    border: 0px;
-    border-radius: 4px;
-    padding: 2px;
-    margin-left: 2px;
-    margin-right: 0;
-}
+
 
 /*======================*/
 

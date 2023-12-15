@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import ProductForm from "./form/ProductForm";
+import ProductPage from "./form/ProductPage";
 import Product from "../interfaces/Product";
 import ProductType from "../interfaces/ProductType";
 
@@ -142,7 +142,7 @@ export default function ProductManager() {
     //view
     return (
         <div>
-            <ProductForm productList={productList} productTypes={productTypes} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch}/>
+            <ProductPage productList={productList} productTypes={productTypes} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch}/>
         </div>
     )
 }

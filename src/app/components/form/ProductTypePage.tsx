@@ -30,7 +30,7 @@ interface OnSearchProps {
     onSearch?: KeywordEventHandler
 }
 
-export function ProductTypeForm({ productTypes, onInsert, onUpdate, onDelete, onSearch }: ProductTypeProps & OnInsertProps & OnUpdateProps & OnDeleteProps & OnSearchProps) {
+export function ProductTypePage({ productTypes, onInsert, onUpdate, onDelete, onSearch }: ProductTypeProps & OnInsertProps & OnUpdateProps & OnDeleteProps & OnSearchProps) {
     //States
     const [isFormVisible, setFormVisible] = useState(false);
     const [fields, setFields] = useState<ProductType>({})
@@ -83,27 +83,12 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate, onDelete, on
         hiddenForm();
     }
 
-    function lowerDelete(event: any, id: string) {
-        //Preventing default event
-        event.preventDefault();
-
-        //Call if onDelete exits
-        if (onDelete) {
-            onDelete(id);
-        }
-    }
-    function lowerOnSearch(keyword: string) {
-        if (onSearch) {
-            onSearch(keyword);
-        }
-    }
-
     //View
     return (
         <div>
             <div className="form-search">
                 <label htmlFor="itemLabel">Loại sản phẩm: </label>
-                <Search onSearch={lowerOnSearch} />
+                <Search onSearch={(onSearch? onSearch : undefined)} />
 
                 <button className="btnitem" type="button" onClick={displayForm}>Thêm</button>
             </div>
@@ -160,9 +145,15 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate, onDelete, on
             <tr>
                 <td>{productType.id}</td>
                 <td>{productType.name}</td>
+
+                {/* Action button */}
                 <td>
                     <button className="button-update" onClick={() => updateButton(productType)}>Cập nhập</button>
-                    <button className="button-delete" onClick={(event) => lowerDelete(event, (productType.id?productType.id:""))}>Xóa</button>
+                    
+                    <button className="button-delete" 
+                        onClick={() => {onDelete ? onDelete(productType.id? productType.id : "") :undefined}}>
+                        Xóa
+                    </button>
                 </td>
             </tr>
         )

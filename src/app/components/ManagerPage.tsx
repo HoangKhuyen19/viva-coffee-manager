@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import OrderManager from "./OrderManager";
-import AccountPageManager from "./AccountManager";
+import AccountManager from "./AccountManager";
 import ProductManager from "./ProductManager";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faList, faBook, faMugHot, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -23,7 +23,6 @@ export default function ManagerPage() {
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
         setSelectedTab(tab)
-        // setImageVisible(tab === null)
     }
 
     const getTabClass = (tab: Tab) => {
@@ -106,7 +105,7 @@ export default function ManagerPage() {
                 {selectedTab === null && <div className="img"> </div>}
                 {selectedTab === "ProductTypeManager" && <ProductTypeManager/>}
                 {selectedTab === "ProductManager" && <ProductManager />}
-                {selectedTab === "AccountManager" && <AccountPageManager />}
+                {selectedTab === "AccountManager" && <AccountManager />}
                 {selectedTab === "OrderManager" && <OrderManager />}
             </div>
         </div>

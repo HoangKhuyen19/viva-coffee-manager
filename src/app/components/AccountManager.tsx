@@ -1,79 +1,144 @@
-'use client'
-import { useState } from "react";
-import Search from "./Search";
+import { useEffect, useState } from "react";
+import AccountPage from "./form/AccountPage";
+import User from "../interfaces/User";
+
 export default function AccountManager() {
+    //States:
+    const [accounts, setAccounts] = useState<User[]>([])
 
-    const [isItemVisible, setItemVisible] = useState(false);
+    //Effect
+    useEffect(() => {
+        get();
+    }, [])
 
-    const showFormItem = () => {
-        setItemVisible(true); // Sửa thành true để hiển thị form
+    //Function:
+    async function get() {
+        try {
+            //Sending http request
+            const response: Response = await fetch("manager/account-manager");
+
+            //Parse response body to json
+            var { success, message, accounts }: { success: Boolean, message: string, accounts: User[] } = await response.json();
+
+            //If get succesfully 
+            if (success) {
+                setAccounts(accounts);
+            } else {
+                //If failed
+                alert(message);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình lấy danh sách");
+        }
     }
 
-    const closeFormItem = () => {
-        setItemVisible(false); // Sửa thành false để ẩn form
+    async function onInsert(account: User) {
+        try {
+            //Sending http request
+            const response: Response = await fetch(
+                "/manager/account-manager/add",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            username: account.username,
+                            password: account.password,
+                            fullName: account.fullName,
+                            permission: account.permission
+                        }
+                    )
+                }
+            )
+            //Parse response body to json
+            const { success, message }: { success: boolean, message: string } = await response.json();
+
+            //If insert successfully
+            if(success){
+                get();
+            }else{
+                //If insert failed
+                alert(message);
+            }
+            
+        } catch (error) {
+            alert("Có lỗi trong quá trình tạo tài khoản");
+        }
     }
 
+    async function onUpdate(account: User) {
+        try {
+            //Sending http request
+            const response: Response = await fetch(
+                "/manager/account-manager/update",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            username: account.username,
+                            password: account.password,
+                            fullName: account.fullName,
+                            permission: account.permission
+                        }
+                    )
+                }
+            )
+            //Parse response body to json
+            const { success, message }: { success: boolean, message: string } = await response.json();
 
+            //If update successfully
+            if(success){
+                get();
+            }else{
+                //If update failed
+                alert(message);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình cập nhật tài khoản")
+        }
+    }
+
+    async function onDelete(username: string) {
+        try {
+            //Sending http request
+            const response : Response =  await fetch(`/manager/account-manager/delete?username=${username}`);
+
+            //Parse response body to json
+            const {success,message} : { success: boolean, message: string } = await response.json();
+
+            //If delete successfully
+            if (success) {
+                get();
+            } else {
+                //If delete failed
+                alert(message);
+            }
+
+        } catch (error) {
+            alert("Có lỗi trong quá trình xóa tài khoản");
+        }
+    }
+
+    async function onSearch(keyword : string) {
+        try {
+            //Sending http request
+            const response : Response =  await fetch(`/manager/account-manager/search?key=${keyword}`);
+            
+
+            //Parse response body to json
+            const {success,accounts} : { success: boolean, accounts: User[] } = await response.json();
+
+            //If search successfully
+            if (success) {
+                setAccounts(accounts);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình tìm kiếm");
+        }
+    }
+    //View
     return (
         <div>
-           
-           <div className="form-search">
-                <label htmlFor="itemLabel">Quản lý tài khoản: </label>
-                    <Search/>
-                    <button className="button-add" type="button" onClick={showFormItem}>Thêm</button>
-                
-            </div><br />
-
-            {/* Bảng  */}
-            <table border={1} cellPadding={2} id="AccountTable">
-
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>FullName</th>
-                        <th>Role</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>chutan</td>
-                        <td>123</td>
-                        <td>Vòng Chủ Tân</td>
-                        <td>Employee</td>
-
-                        <td>
-                            <button className="button-update">CẬP NHẬT</button> 
-                            <button className="button-delete">XÓA</button>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-
-            {isItemVisible && (
-                <div id="form-add-account">
-                    <div className="container-form-account">
-                        <form className="form-account">
-                            <span className="close-button-account" onClick={closeFormItem}>X</span>
-                            <h2>Thêm tài khoản</h2>
-                            <input className="account-user" type="text" placeholder="Username" required /><br />
-                            <input className="account-password" type="text" placeholder="Password" required /><br />
-                            <input className="account-fullName" type="text" placeholder="FullName" required /><br />
-
-                            <select className="inputSelect-account" name="Permission" id="Permission">
-                                <option value="none"></option>
-                                <option value="Admin">Admin</option>
-                                <option value="Employee">Employee</option>
-                            </select><br />
-
-                            <button className="button-add-account" type="submit">Thêm</button> <br />
-                        </form>
-                    </div>
-                </div>
-            )}
+            <AccountPage accounts={accounts} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch} />
         </div>
-    )
+    );
 }

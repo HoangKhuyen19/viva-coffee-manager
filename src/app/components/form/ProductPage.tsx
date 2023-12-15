@@ -2,7 +2,7 @@ import { useState } from "react";
 import Search from "../Search";
 import Product from "@/app/interfaces/Product";
 import ProductType from "@/app/interfaces/ProductType";
-import { ProductTypeProps } from "./ProductTypeForm";
+import { ProductTypeProps } from "./ProductTypePage";
 
 //Type
 type OnSubmitEventHandler = (fields: any) => void;
@@ -36,7 +36,7 @@ interface onSearchProps {
     onSearch?: KeyWordEventHandler;
 }
 
-export default function ProductForm({ productList, productTypes, onInsert, onUpdate, onDelete, onSearch }: ProductProps & ProductTypeProps & OnInsertProps & OnInsertProps & OnUpdateProps & onDeleteProps & onSearchProps) {
+export default function ProductPage({ productList, productTypes, onInsert, onUpdate, onDelete, onSearch }: ProductProps & ProductTypeProps & OnInsertProps & OnInsertProps & OnUpdateProps & onDeleteProps & onSearchProps) {
     //States:
     const [isFormVisible, setFormVisible] = useState(false);
     const [fields, setFields] = useState<Product>({});
@@ -59,9 +59,19 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
         //Change state update
         setIsUpdate(true);
 
+        //Get value type of product
+        const productType = productTypes.find((type) => (type.name == product.type));
+
         //Display form
+        setFields({
+            id: product.id,
+            name:product.name,
+            price: product.price,
+            type: productType?.id,
+            description: product.description
+        });
+
         displayForm();
-        setFields(product);
     }
     function onFieldsChanged({ target }: any) {
         //Get name
@@ -72,23 +82,7 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
 
         setFields({ ...fields, [name]: value });
     }
-    //Product Row
-    function ProductRow({ product }: ProductRowProps) {
-        return (
-            <tr>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.type}</td>
-                <td>{product.description}</td>
-                <td>
-                    <button className="button-update" onClick={() => updateFormVisible(product)}>CẬP NHẬT</button>
-                    <button className="button-delete" onClick={(event)=> lowerDelete(event, (product.id ? product.id : ""))} >XÓA</button>
-                </td>
-            </tr>
-        )
-    }
-
+    
     //Product type form select
     function ProductTypeSelect({ productType }: ProductTypeSelectProps) {
         return (
@@ -116,23 +110,29 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
         hiddenForm();
     }
 
-    function lowerDelete(event: any, id: string){
-        //Preventing default event
-        event.preventDefault();
+    //Product Row
+    function ProductRow({ product }: ProductRowProps) {
+        return (
+            <tr>
+                <td>{product.id}</td>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+                <td>{product.type}</td>
+                <td>{product.description}</td>
 
-        //Call if onDelete exist
-        if(onDelete){
-            onDelete(id);
-        }
+                {/* Action button */}
+                <td>
+                    <button className="button-update" onClick={() => updateFormVisible(product)}>CẬP NHẬT</button>
+
+                    <button className="button-delete" 
+                        onClick={() => {onDelete ? onDelete(product.id ? product.id : "") : undefined}}>
+                        XÓA
+                    </button>
+                </td>
+            </tr>
+        )
     }
-
-    function lowerSearch(keyword : string){
-        //Call if onSearch exist
-        if(onSearch){
-            onSearch(keyword);
-        }
-    }
-
+    
     //View
     return (
         <div>
@@ -140,7 +140,7 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
 
             <div className="form-search">
                 <label htmlFor="itemLabel">Quản lý sản phẩm: </label>
-                <Search onSearch={lowerSearch}/>
+                <Search onSearch={(onSearch ? onSearch : undefined)}/>
                 <button className="button-add" type="button" onClick={displayForm}>Thêm</button>
             </div><br></br>
 
@@ -176,7 +176,7 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
                     <div className="container-form-account">
                         <form className="form-account" onSubmit={lowerOnSumit}>
                             <span className="close-button-account" onClick={hiddenForm}>X</span>
-                            <h2>Thêm sản phẩm</h2>
+                            <h2>{isUpdate ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}</h2>
 
                             {/* product id */}
                             {!isUpdate && (<input className="product-id" type="text" name="id" value={(fields.id ? fields.id : "")} onChange={onFieldsChanged} placeholder="Mã sản phẩm" required />)}
@@ -192,9 +192,9 @@ export default function ProductForm({ productList, productTypes, onInsert, onUpd
 
                             {/* product type */}
 
-                            <select className="inputSelect-product" name="type" value={fields.type?fields.type:""} onChange={onFieldsChanged} >
+                            <select className="inputSelect-product" name="type" value={fields.type?fields.type:""} onChange={onFieldsChanged} required>
                                 {/* Select option defaul */}
-                                <option value=""> Loại sản phẩm </option>
+                                <option value="" disabled hidden> Loại sản phẩm </option>
 
                                 {/* List option */}
                                 {productTypes.map((productType) => (

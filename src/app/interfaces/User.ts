@@ -1,5 +1,6 @@
 export default interface User{
-    username: string,
-    fullName: string,
-    permission: string
+    username?: string,
+    password?: string,
+    fullName?: string,
+    permission?: string
 }

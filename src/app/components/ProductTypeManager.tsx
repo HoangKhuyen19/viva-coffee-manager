@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ProductTypeForm } from "./form/ProductTypeForm";
+import { ProductTypePage } from "./form/ProductTypePage";
 import ProductType from "../interfaces/ProductType";
 
 export function ProductTypeManager() {
@@ -131,7 +131,7 @@ export function ProductTypeManager() {
     }
     //Views:
     return (
-        <ProductTypeForm productTypes={productTypeList} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch}/>
+        <ProductTypePage productTypes={productTypeList} onInsert={onInsert} onUpdate={onUpdate} onDelete={onDelete} onSearch={onSearch}/>
         
     )
 }
