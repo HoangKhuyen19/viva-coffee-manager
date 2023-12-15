@@ -91,10 +91,10 @@ export function ProductTypeManager() {
         }
     }
 
-    async function onDelete(productType:ProductType) : Promise<void>{
+    async function onDelete(id: string) : Promise<void>{
         try {
             //Sending http request
-            var response : Response = await fetch(`/manager/product-type-manager/delete?id=${productType.id}`);
+            var response : Response = await fetch(`/manager/product-type-manager/delete?id=${id}`);
             
             //Converting body
             const {success, message} : {success: boolean, message: string} = await response.json();
@@ -115,7 +115,7 @@ export function ProductTypeManager() {
         try {
             //Try sending http request
             var response : Response = await fetch(`/manager/product-type-manager/search?key=${keyword}`);
-            debugger;
+            
             //Parse response body to json 
             const {success, message, productTypes} : {success: boolean, message: string, productTypes: ProductType[]} = await response.json();
 

@@ -24,7 +24,6 @@
             //Getting product type list
             var productTypes: ProductType[] = await productTypeService.getByFilter(filter, path);
 
-            console.log(productTypes);
             //Converting product type list to data
             var productTypeData: ProductTypeData[] = productTypes.map(
                 function (productType): ProductTypeData {

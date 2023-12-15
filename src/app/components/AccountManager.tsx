@@ -33,6 +33,7 @@ export default function AccountManager() {
                         <th>Password</th>
                         <th>FullName</th>
                         <th>Role</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
 
@@ -44,7 +45,7 @@ export default function AccountManager() {
                         <td>Employee</td>
 
                         <td>
-                            <button className="button-update">CẬP NHẬT</button><br />
+                            <button className="button-update">CẬP NHẬT</button> 
                             <button className="button-delete">XÓA</button>
                         </td>
                     </tr>

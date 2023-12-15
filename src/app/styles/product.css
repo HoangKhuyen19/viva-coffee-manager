@@ -1,28 +1,11 @@
 /* Tìm kiếm */
 
 /* cái này container*/
-.sreach-container-prpduct{
+.sreach-container-product{
     display: flex;
     align-items: center;
     margin-left: 400px;
     margin-top: 50px;
-}
-
-/* ô tìm kiếm */
-.account-search-product{
-    border-radius: 4px 0 0 4px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    width: 250px;
-}
-
-/* Nút tìm kiếm*/
-.button-sreach-product{
-    border-radius: 0 4px 4px 0;
-    padding: 8px;
-    border: 1px solid #ccc;
-    background-color: #CD853F;
-    cursor: pointer;
 }
 
 /*Nút thêm*/
@@ -47,18 +30,25 @@
 
 
 #ProductTable{
-    width:30%;
+    width:80%;
     border-collapse: collapse;
     border-color: black;
-    margin-left: 500px;
+    margin-left: 110px;
 }
 #ProductTable th{
     background-color: rgb(222,184,135); 
     text-align: center;
-     
  }
 #ProductTable td{
-    text-align: center;
+    padding-left: 20px;
+    text-align: left;
+    vertical-align: middle;
+    height: 25px;
+
+}
+#ProductTable tr{
+    font-size: 16px;
+    padding: 15px;
 }
 
 /*======================*/
@@ -74,10 +64,8 @@
     background: rgba(0, 0, 0, 0.5);
     align-items: center;
     justify-content: center;
-    
     display: flex;
     justify-content: center;
-    
 }
 
 
@@ -122,3 +110,4 @@
     margin-left: 230px;
     cursor: pointer;
 }
+

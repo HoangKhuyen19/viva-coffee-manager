@@ -8,22 +8,7 @@
     margin-top: 50px;
 }
 
-/* ô tìm kiếm */
-.account-search{
-    border-radius: 4px 0 0 4px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    width: 250px;
-}
 
-/* Nút tìm kiếm*/
-.button-sreach{
-    border-radius: 0 4px 4px 0;
-    padding: 8px;
-    border: 1px solid #ccc;
-    background-color: #CD853F;
-    cursor: pointer;
-}
 
 /*Nút thêm*/
 .button-add{
@@ -32,7 +17,7 @@
     border: 1px solid #ccc;
     background-color: #CD853F;
     margin-left: 5px;
-    width: 70px;
+    width: 100px;
 }
 
 /* thêm hiệu ứng cho nút add */
@@ -47,18 +32,21 @@
 
 
 #AccountTable{
-    width:90%;
+    width:75%;
     border-collapse: collapse;
     border-color: black;
-    margin-left: 100px;
+    margin-left: 130px;
 }
 #AccountTable th{
     background-color: rgb(222,184,135); 
     text-align: center;
-     
  }
 #AccountTable td{
     text-align: center;
+}
+
+#AccountTable tr{
+    width: 200px;
 }
 
 
@@ -68,6 +56,7 @@
     border: 0px;
     border-radius: 4px;
     padding: 2px;
+    width: 100px;
 }
 /* Nút xóa ở cột trong bảng */
 .button-delete {
@@ -76,13 +65,12 @@
     border-radius: 4px;
     padding: 2px;
     margin-left: 2px;
+    margin-right: 0;
 }
 
 /*======================*/
 
 /* Cái khung khi mở form từ nút Thêm*/
-
-/*test tao thề t copy của con hiếu, t không hiểu thật*/
 .container-form-account{
     position: fixed;
     top: 0;

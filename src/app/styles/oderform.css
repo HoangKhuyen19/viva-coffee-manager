@@ -50,7 +50,9 @@
     border: 0px;
     border-radius: 4px;
     padding: 2px;
-    margin: 2px;
+    margin: 4px;
+    margin-left: 5px;
+
 }
 .button-delete:hover,.button-update:hover{
     font-size: 16px;

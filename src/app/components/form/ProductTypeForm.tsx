@@ -3,11 +3,10 @@ import ProductType from "../../interfaces/ProductType";
 import Search from "../Search";
 
 //Type
-type OnSubmitEventHandler = (fields: ProductType) => void;
-type OnDeleteEventHandler = (productType: ProductType) => void;
-type OnSearchEventHandler = (keyword: string) => void
+type OnSubmitEventHandler = (productType: ProductType) => void;
+type KeywordEventHandler = (keyword: string) => void
 //Interface:
-interface ProductTypeProps {
+export interface ProductTypeProps {
     productTypes: ProductType[];
 }
 
@@ -19,26 +18,26 @@ interface OnInsertProps {
     onInsert?: OnSubmitEventHandler;
 }
 
-interface OnUpdateProps{
+interface OnUpdateProps {
     onUpdate?: OnSubmitEventHandler;
 }
 
 interface OnDeleteProps {
-    onDelete?: OnDeleteEventHandler;
+    onDelete?: KeywordEventHandler;
 }
 
-interface OnSearchProps{
-    onSearch? : OnSearchEventHandler
+interface OnSearchProps {
+    onSearch?: KeywordEventHandler
 }
 
-export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, onSearch }: ProductTypeProps & OnInsertProps & OnUpdateProps & OnDeleteProps & OnSearchProps) {
+export function ProductTypeForm({ productTypes, onInsert, onUpdate, onDelete, onSearch }: ProductTypeProps & OnInsertProps & OnUpdateProps & OnDeleteProps & OnSearchProps) {
     //States
-    const [isItemVisible, setItemVisible] = useState(false);
+    const [isFormVisible, setFormVisible] = useState(false);
     const [fields, setFields] = useState<ProductType>({})
-    const [stateUpdate, setStateUpdate]  = useState(false);
+    const [stateUpdate, setStateUpdate] = useState(false);
 
     //Event handler
-    function updateButton(productType : ProductType){
+    function updateButton(productType: ProductType) {
         //Change state
         setStateUpdate(true);
 
@@ -47,18 +46,16 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, on
 
         setFields(productType);
     }
-    function displayForm() {
-        //Hidden form if state true
-        if(isItemVisible){
-            setItemVisible(false);
 
-            //Set state update false
-            setStateUpdate(false);
-            setFields({});
-        }else{
-            //Show form if state false
-            setItemVisible(true);
-        }
+    function displayForm() {
+        setFormVisible(true);
+    }
+    function hiddenForm() {
+        setFormVisible(false);
+
+        //Set state update false
+        setStateUpdate(false);
+        setFields({});
     }
     function onFieldsChanged({ target }: any) {
         //Get name:
@@ -78,25 +75,25 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, on
         if (onInsert && stateUpdate == false) {
             onInsert(fields);
         }
-        if(onUpdate && stateUpdate == true) {
+        if (onUpdate && stateUpdate == true) {
             onUpdate(fields);
         }
 
         setFields({});
-        displayForm();
+        hiddenForm();
     }
 
-    function lowerDelete(event: any, productType: ProductType) {
+    function lowerDelete(event: any, id: string) {
         //Preventing default event
         event.preventDefault();
 
         //Call if onDelete exits
         if (onDelete) {
-            onDelete(productType);
+            onDelete(id);
         }
     }
-    function lowerOnSearch(keyword: string){
-        if(onSearch){
+    function lowerOnSearch(keyword: string) {
+        if (onSearch) {
             onSearch(keyword);
         }
     }
@@ -106,7 +103,7 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, on
         <div>
             <div className="form-search">
                 <label htmlFor="itemLabel">Loại sản phẩm: </label>
-                <Search onSearch={lowerOnSearch}/>
+                <Search onSearch={lowerOnSearch} />
 
                 <button className="btnitem" type="button" onClick={displayForm}>Thêm</button>
             </div>
@@ -134,23 +131,23 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, on
             </table>
 
             {/* Form add product type */}
-            {isItemVisible && (
+            {isFormVisible && (
                 <div className="from-add">
                     <div className="container-itemPoduct">
-                        <form className="form-itemProduct"  onSubmit={lowerSubmit}>
+                        <form className="form-itemProduct" onSubmit={lowerSubmit}>
                             {/* Cancel */}
-                            <span className="close-btnitem" onClick={displayForm}>X</span>
+                            <span className="close-btnitem" onClick={hiddenForm}>X</span>
                             <h3>Loại sản phẩm</h3>
 
                             {/* Product Type Id */}
-                            {!stateUpdate && ( <input className="itemProduct-id" type="text" name="id" value={(fields.id ? fields.id : "")} onChange={onFieldsChanged} placeholder="Mã loại" required />)}
-                               
-                            
+                            {!stateUpdate && (<input className="itemProduct-id" type="text" name="id" value={(fields.id ? fields.id : "")} onChange={onFieldsChanged} placeholder="Mã loại" required />)}
+
+
                             {/* Product Type Name */}
                             <input className="itemProduct-name" type="text" name="name" value={(fields.name ? fields.name : "")} onChange={onFieldsChanged} placeholder="Tên loại" required /><br />
 
                             {/* Submit */}
-                            <button className="button-itemProduct" type="submit"> {stateUpdate? "Cập nhật" :  "Thêm" }</button>
+                            <button className="button-itemProduct" type="submit"> {stateUpdate ? "Cập nhật" : "Thêm"}</button>
                         </form>
                     </div>
                 </div>
@@ -165,12 +162,12 @@ export function ProductTypeForm({ productTypes, onInsert, onUpdate ,onDelete, on
                 <td>{productType.name}</td>
                 <td>
                     <button className="button-update" onClick={() => updateButton(productType)}>Cập nhập</button>
-                    <button className="button-delete" onClick={(event) => lowerDelete(event,productType)}>Xóa</button>
+                    <button className="button-delete" onClick={(event) => lowerDelete(event, (productType.id?productType.id:""))}>Xóa</button>
                 </td>
             </tr>
         )
-        
-    
+
+
     }
 }
 

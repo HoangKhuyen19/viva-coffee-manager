@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) : Promise<NextResponse> {
     const name: string = parameters.name;
 
     //Get product type by id
-    const productType : ProductType | undefined = await productTypeService.get(id, path);
+    let productType : ProductType | undefined = await productTypeService.get(id, path);
     
     //If product type exist case
     if(productType){
@@ -25,11 +25,11 @@ export async function POST(request: NextRequest) : Promise<NextResponse> {
     }
     
     //If product type not found
-    const newProductType : ProductType = new ProductType(id, name)
+    productType = new ProductType(id, name)
 
     //Insert product type to DB
     try {
-        productTypeService.insert(newProductType);
+        productTypeService.insert(productType);
     } catch (error) {
         NextResponse.json(
             {
