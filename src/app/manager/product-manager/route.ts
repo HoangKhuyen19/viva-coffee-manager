@@ -1,11 +1,11 @@
 import { productService, productTypeService } from "@/domain/ModelService";
 import Product from "@/domain/models/Product";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import ProductData from "./aliases";
 import ProductType from "@/domain/models/ProductType";
 import ProductTypeData from "../product-type-manager/aliases";
 
-export async function GET(request : NextRequest) : Promise<NextResponse>{
+export async function GET() : Promise<NextResponse>{
     //Get products list
     const path : any[] = [];
 

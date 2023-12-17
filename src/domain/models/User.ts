@@ -8,6 +8,8 @@ export default class User{
     private password?: string;
     private fullName?: string;
     private permission?: UserPermission;
+
+    //dependency
     private orders: Order[];
 
     //Constructor

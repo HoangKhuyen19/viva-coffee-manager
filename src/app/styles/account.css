@@ -42,7 +42,9 @@
     text-align: center;
  }
 #AccountTable td{
-    text-align: center;
+    padding-left: 10px;
+    text-align: left;
+    font-size: 17px;
 }
 
 #AccountTable tr{
@@ -118,4 +120,12 @@
 .close-button-account{
     margin-left: 230px;
     cursor: pointer;
+}
+.passwordVisible{
+    margin-left: 5px;
+    margin-right: 5px;
+    float: right;
+    width: 16px;
+
+    opacity: 0.6;
 }

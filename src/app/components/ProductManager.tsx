@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import ProductPage from "./form/ProductPage";
+import ProductPage from "./page/ProductPage";
 import Product from "../interfaces/Product";
 import ProductType from "../interfaces/ProductType";
 
@@ -29,7 +29,7 @@ export default function ProductManager() {
                 alert("Không thành công");
             }
         } catch (error) {
-            console.error(error);
+            alert("Có lỗi trong quá trình xử lý")
         }
     }
 
@@ -69,7 +69,6 @@ export default function ProductManager() {
 
     async function onUpdate(product: Product){
         try {
-            console.log(product);
             //Sending http request
             var response : Response =  await fetch(
                 "/manager/product-manager/update",

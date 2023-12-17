@@ -22,7 +22,6 @@ export async function GET(request : NextRequest) : Promise<NextResponse>{
         const path : any[] = [];
         const accountList : User[] = await userService.getByFilter(filter, path);
 
-        console.log(accountList);
         //Converting account list to data
         const accounts : UserData[] = accountList.map((account) : UserData => {
             return{

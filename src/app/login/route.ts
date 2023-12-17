@@ -16,21 +16,20 @@ export async function POST(request : NextRequest) : Promise<NextResponse>{
     const path : any[] = [];
     const user : User | undefined = await userService.get(username, path);
 
-    //Converting User to UserData
-    const userData : UserData = {
-        username : user?.Username as string,
-        fullName : user?.FullName as string,
-        permission : user?.Permission as string
-    }
-    
-       
-    
     //User not found case
     if(!user){
         return NextResponse.json({
             success:false,
             message:"Tài khoản hoặc mật khẩu không đúng"
         });
+    }
+
+
+    //Converting User to UserData if found user
+        const userData : UserData = {
+        username : user?.Username as string,
+        fullName : user?.FullName as string,
+        permission : user?.Permission as string
     }
 
     //Password invalid case
@@ -41,6 +40,7 @@ export async function POST(request : NextRequest) : Promise<NextResponse>{
         });
     }
 
+    //Valid case
     return NextResponse.json({
         success: true,
         user : userData

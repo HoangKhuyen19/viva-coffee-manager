@@ -1,19 +1,4 @@
 /* tìm kiếm,thêm hóa đơn*/
-.order-search {
-    border-radius: 4px 0 0 4px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    width: 250px;
-}
-
-.button-search {
-    border-radius: 0 4px 4px 0;
-    padding: 8px;
-    border: 1px solid #ccc;
-    background-color: #CD853F;
-    cursor: pointer;
-}
-
 .btn-searchadd {
     border-radius: 0 4px 4px 0;
     padding: 8px;
@@ -32,9 +17,10 @@
     position: relative; 
 }
 #productTable{
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
     border-color: black;
+    margin-left: 110px;
    
 }
 #productTable th{
@@ -102,7 +88,7 @@ label {
     
 }
 h2{
-   color: #CD853F;
+   color: #ca7826;
 }
 .form-oder{
     text-align: center;
@@ -155,7 +141,7 @@ h2{
     width: 60px;
     background-color: #CD853F;
     height: 25px;
-    border-radius: 5px;
+    border-radius: 4px;
     border: 0px;
     margin-left: 15px;
 }
@@ -165,23 +151,51 @@ h2{
     height: 30px;
     border-radius: 5px;
     border: 0px;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 .btn-order:hover{
-    
-    font-size: 16px;  
+    background-color: rgb(126, 209, 126);
+
 }
 .btn-add:hover{
-    
-    font-size: 16px;
+    background-color: #e9ac6f;
 }
 /* table */
-#productOrder{
+
+.productOrder {
+    display: block;
     width: 100%;
     border-collapse: collapse;
-    border-color: black;
-  
-   
+    border: 0.2px solid;
 }
-#productOrder th{
+
+
+.productOrder tbody {
+    display: block;
+}
+
+.productOrder tbody {
+    max-height: 130px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.productOrder th,
+.productOrder td {
+    min-width: 126px;
+    text-align: center;
+    border: 0.3px solid;
+}
+
+.productOrder th {
     background-color: #CD853F;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
+
+
+
+
+    

@@ -10,7 +10,7 @@ import IOrderService from "./interfaces/IOrderService";
 export default class UserService implements IUserService {
     //Fields:
     private userDBHandler: IUserDBHandler;
-    private orderService?: IOrderService;
+    private orderService?: IOrderService; 
 
     //Constructor
     public constructor(orderService?: IOrderService) {

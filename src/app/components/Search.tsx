@@ -1,10 +1,10 @@
 import { useState } from "react"
 
+
 type OnSearchEventHandler = (keyword: string) => void
 interface OnSearchProps{
     onSearch? : OnSearchEventHandler
 }
-
 export default function Search({onSearch} : OnSearchProps) {
     //State 
     const [field, setFields] = useState("")

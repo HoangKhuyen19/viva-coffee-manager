@@ -8,6 +8,7 @@ function MainPage() {
     //States:
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(false)
+
     //Effect:
     useEffect(() => {
         //Get user from sessionStorage
@@ -16,6 +17,7 @@ function MainPage() {
         if (storedUser) {
             setUser(true);
         }
+
         setLoading(true);
     }, []);
 

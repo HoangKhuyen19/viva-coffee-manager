@@ -176,7 +176,7 @@ export default class OrderDetailService implements IOrderDetailService{
         return orderDetail
     }
 
-    private async multiDataToOrderDetail(datas: OrderDetailData[], path: any[]): Promise<OrderDetail[]> {
+    public async multiDataToOrderDetail(datas: OrderDetailData[], path: any[]): Promise<OrderDetail[]> {
         const result: OrderDetail[] = [];
 
         //Try converting

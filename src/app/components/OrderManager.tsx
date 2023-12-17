@@ -1,103 +1,65 @@
-'use client'
-import { useState } from "react";
-import Search from "./Search";
+import { useEffect, useState } from "react";
+import OrderPage from "./page/OrderPage";
+import Order from "../interfaces/Order";
+import User from "../interfaces/User";
+import OrderDetail from "../interfaces/OrderDetail";
+
 
 export default function OrderManager() {
-    
-    const [isFormVisible, setFormVisible] = useState(false);
+    //State:
+    const [ orders, setOrders] = useState<Order[]>([]);
+    const [ accounts, setAccounts] = useState<User[]>([]);
+    const [ totalPrices, setTotalPrices] = useState<number>()
+    //Effect
+    useEffect(() => {
+        get();
+    },[totalPrices])
 
-    const showForm = () => {
-        setFormVisible(true);
-    };
+    //Function
+    async function get(){
+        try {
+            //Sending http request
+            const response : Response = await fetch("/manager/order-manager");
 
-    const closeForm = () => {
-        setFormVisible(false);
-    };
+            //Parse response body to json
+            const { success, orders, accounts} : { success:boolean, message: string, orders: Order[], accounts: User[]} = await response.json();
 
-    return (
-        <>
-            <div>
-                <div>
+            //Get successfully
+            if(success){
+                setOrders(orders);
+                setAccounts(accounts);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình truy cập tới đơn hàng");
+        }
+    }
 
-                    <div className="form-search">
-                        <label htmlFor="orderSearch">Đơn hàng :</label>
-                        <Search />
-                        <button className="btn-searchadd" type="button" onClick={showForm}>Thêm</button>
-                    </div><br />
-                </div>
-                <table border={1} cellPadding={5} id="productTable">
-                    <thead>
-                        <tr>
-                            <th>Mã đơn hàng</th>
-                            <th>Người tạo</th>
-                            <th>Ngày tạo</th>
-                            <th>Tổng tiền</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>HD01</td>
-                            <td>hiếu</td>
-                            <td>01/01/2023</td>
-                            <td>$100</td>
-                            <td>
+    async function changeAmounts(orderDetails : OrderDetail[]) : Promise<void>{
 
-                                <button className="button-update">Cập nhập</button>
-                                <button className="button-delete">Xóa</button>
-                            </td>
+        try {
+            const response : Response = await fetch(
+                "/manager/order-manager/changeamounts",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            orderDetails: orderDetails
+                        }
+                    )
+                }
+            )
 
-                        </tr>
-                    </tbody>
+            const {success , totalPrice} : {success:boolean,totalPrice : number} = await response.json();
 
-
-                </table>
-                {isFormVisible && (
-                    <div className="from-overlay">
-                        <div className="container-oder">
-                            <form className="form-oder">
-                                <span className="close-btn" onClick={closeForm}>X</span>
-                                <h2>Đơn hàng</h2>
-                                <input className="orderId" type="text" placeholder="Mã đơn hàng" required />
-                                <select className="orderUser">
-                                    <option value="noUser">Người tạo</option>
-                                    <option>Khuyến</option>
-                                    <option>Tân</option>
-                                    <option>Hiếu</option>
-                                </select><br />
-                                <input className="orderDate" type="date" placeholder="Ngày tạo" required /><br />
-                                <input className="orderTotal" type="number" placeholder="Tổng tiền" required /><br />
-                                <div className="form-add">
-                                    <select className="orderItem">
-                                        <option value="noItem">Loại sản phẩm</option>
-                                        <option></option>
-                                        <option></option>
-                                    </select>
-                                    <input className="orderAmout" type="number" placeholder="Số lượng" required />
-                                    <button className="btn-add" type="submit">Thêm</button>
-                                </div>
-                                <table border={1} cellPadding={5} id="productOrder">
-                                    <thead>
-
-                                        <tr>
-                                            <th>Sản phẩm</th>
-                                            <th>Số lượng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <tr>
-                                            <td>Trà đào</td>
-                                            <td>1</td>
-                                        </tr>
-                                    </tbody>
-                                </table><br></br>
-                                <button className="btn-order" type="submit">Đặt hàng</button><br />
-                            </form>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </>
-    );
+            if(success){
+                setTotalPrices(totalPrice);
+            }
+        } catch (error) { 
+            alert("Có lỗi trong quá trình xử lý");
+        }
+    }
+    //View
+    return(
+        <OrderPage orders={orders} accounts={accounts} totalPrice={totalPrices} changeAmounts={changeAmounts}/>
+    )  
 }

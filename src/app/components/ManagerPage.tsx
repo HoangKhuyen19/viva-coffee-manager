@@ -15,11 +15,6 @@ export default function ManagerPage() {
     const [user, setUser] = useState({ fullName: "", permission: "" })
     const [selectedTab, setSelectedTab] = useState<Tab>(null);
     
-
-    //Function:
-
-
-    
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
         setSelectedTab(tab)

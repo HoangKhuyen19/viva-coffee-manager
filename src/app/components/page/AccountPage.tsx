@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Search from "../Search";
 import User from "@/app/interfaces/User";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
+import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 
 //type
 type OnSubmitEventHandler = (account : User) => void;
 type KeywordEventHandler = (keyword : string) => void;
 //interface:
-interface AccountProps {
+export interface AccountProps {
     accounts: User[];
 }
 interface AccountRowProps {
@@ -97,9 +100,9 @@ export default function AccountPage({ accounts, onInsert, onUpdate, onDelete, on
             <tr>
                 {/* Account info */}
                 <td>{account.username}</td>
-                <td>{passwordVisible ? account.password : `************`} <button onClick={password}>
-                    Hiện
-                </button></td>
+                <td>{passwordVisible ? account.password : `************`}
+                     <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} onClick={password} className="passwordVisible"/>
+                </td>
                 <td>{account.fullName}</td>
                 <td>{account.permission}</td>
 

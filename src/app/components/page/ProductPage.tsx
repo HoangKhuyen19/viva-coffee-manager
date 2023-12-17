@@ -60,7 +60,7 @@ export default function ProductPage({ productList, productTypes, onInsert, onUpd
         setIsUpdate(true);
 
         //Get value type of product
-        const productType = productTypes.find((type) => (type.name == product.type));
+        const productType = productTypes.find((type) => (type.name === product.type));
 
         //Display form
         setFields({
@@ -191,8 +191,8 @@ export default function ProductPage({ productList, productTypes, onInsert, onUpd
                             <input className="product-description" type="text" name="description" value={(fields.description ? fields.description : "")} onChange={onFieldsChanged} placeholder="Mô tả" required /><br />
 
                             {/* product type */}
-
                             <select className="inputSelect-product" name="type" value={fields.type?fields.type:""} onChange={onFieldsChanged} required>
+                                
                                 {/* Select option defaul */}
                                 <option value="" disabled hidden> Loại sản phẩm </option>
 

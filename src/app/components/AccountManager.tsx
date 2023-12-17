@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import AccountPage from "./form/AccountPage";
+import AccountPage from "./page/AccountPage";
 import User from "../interfaces/User";
-
+ 
 export default function AccountManager() {
     //States:
     const [accounts, setAccounts] = useState<User[]>([])
@@ -12,7 +12,7 @@ export default function AccountManager() {
     }, [])
 
     //Function:
-    async function get() {
+    async function get(){
         try {
             //Sending http request
             const response: Response = await fetch("manager/account-manager");

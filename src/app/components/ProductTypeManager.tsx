@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ProductTypePage } from "./form/ProductTypePage";
+import { ProductTypePage } from "./page/ProductTypePage";
 import ProductType from "../interfaces/ProductType";
 
 export function ProductTypeManager() {
@@ -26,7 +26,7 @@ export function ProductTypeManager() {
                 alert("Không thành công")
             }
         } catch (error) {
-            console.error(error);
+           alert("CÓ lỗi trong quá trình xử lý")
         }
     }
 
@@ -98,7 +98,6 @@ export function ProductTypeManager() {
             
             //Converting body
             const {success, message} : {success: boolean, message: string} = await response.json();
-            console.log(success);
             //If delete successfully
             if(success){
                 get();
