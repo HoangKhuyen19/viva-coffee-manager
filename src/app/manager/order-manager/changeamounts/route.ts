@@ -10,7 +10,9 @@ export async function POST(request : NextRequest) : Promise<NextResponse>{
     const path : any[] = [];
     
     const orderDetailList : OrderDetail[] = await orderDetailService.multiDataToOrderDetail(orderDetails,path);
+    console.log(orderDetailList);
 
+    
     let totalPrice : number = 0;
     
     for (const order of orderDetailList) {

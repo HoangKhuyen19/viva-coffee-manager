@@ -3,12 +3,20 @@ import Product from "@/app/interfaces/Product";
 import { useState } from "react"
 import { ProductProps } from "./ProductPage";
 
+
 //Type
-export type ChangeProductAmountEventHandler = (orderDetail : OrderDetail) => void;
+export type OnInsertEvenHandler = () => void;
 
 //Interface
-export interface ChangeAmountProps{
-    changeAmount? : ChangeProductAmountEventHandler;
+export interface OnInsertProps{
+    onInsert? :OnInsertEvenHandler;
+}
+//Type
+export type ChangeProductAmountEventHandler = (orderDetail: OrderDetail) => void;
+
+//Interface
+export interface ChangeAmountProps {
+    changeAmount?: ChangeProductAmountEventHandler;
 }
 interface OrderDetailsProps {
     orderDetails?: OrderDetail[];
@@ -22,7 +30,9 @@ interface OrderDetailRowProps {
     orderDetail?: OrderDetail;
 }
 
-export default function OrderDetailPage({ orderDetails, productList, changeAmount }: OrderDetailsProps & ProductProps & ChangeAmountProps) {
+
+
+export default function OrderDetailPage({ orderDetails, productList, changeAmount, onInsert }: OrderDetailsProps & ProductProps & ChangeAmountProps & OnInsertProps) {
     //States:
     const [orderDetail, setOrderDetail] = useState<OrderDetail>({});
 
@@ -42,13 +52,18 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
         //Preventing default event
         event.preventDefault();
 
-        //Call if changeAmount exist
-        if (changeAmount) {
-            changeAmount(orderDetail)
+        if ((orderDetail.amount || orderDetail.product) === undefined) {
+            alert("Vui lòng chọn đủ thông tin để thêm")
         }
+        else {
+            //Call if changeAmount exist
+            if (changeAmount) {
+                changeAmount(orderDetail)
+            }
 
-        //Update order detail
-        setOrderDetail({});
+            //Update order detail
+            setOrderDetail({});
+        }
     }
     function OptionProduct({ product }: OptionProductProps) {
         return (
@@ -75,13 +90,18 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
         )
     }
 
+    function lowerOnInsert(event: any){
+        event.preventDefault();
+
+        if(onInsert){
+            onInsert();
+        }
+    }
     //View
     return (
         <div className="from-overlay">
-            {/* <form className="orderDetail " onSubmit={addProduct}> */}
             <div className="form-add">
-                <form> 
-                    <select className="orderItem" name="product" value={orderDetail.product ? orderDetail.product : ""} onChange={onOrderDetailChanged} required >
+                    <select className="orderItem" name="product" value={orderDetail.product ? orderDetail.product : ""} onChange={onOrderDetailChanged} >
                         <option value="" hidden>Sản phẩm</option>
                         {
                             productList.map((product, index) => (<OptionProduct key={index} product={product} />))
@@ -89,14 +109,17 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
                     </select>
 
                     {/* Amount */}
-                    <input className="orderAmout" type="number" name="amount" value={orderDetail.amount ? orderDetail.amount : ""} onChange={onOrderDetailChanged} placeholder="Số lượng" required={true} />
+                    <input className="orderAmout" type="number" name="amount" value={orderDetail.amount ? orderDetail.amount : ""} onChange={onOrderDetailChanged} placeholder="Số lượng"/>
+
+                    {/* Add Product */}
+                    <button className="btn-add" onClick={addProduct}> Thêm </button>
 
                     {/* Submit */}
-                    <button className="btn-add" onClick={addProduct}> Thêm </button>
-                </form>
-
+                    <div className="bottom">
+                        <button className="btn-order" onSubmit={lowerOnInsert} onClick={lowerOnInsert}>Tạo đơn</button>
+                    </div>
             </div>
-            {/* </form> */}
+
 
             {/* Table */}
             <div className="tableDetail">
@@ -121,9 +144,7 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
                 </table><br></br>
             </div>
 
-            <div className="bottom">
-                <button className="btn-order">Tạo đơn</button>
-            </div>
+
 
 
         </div>

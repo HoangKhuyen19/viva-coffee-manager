@@ -3,4 +3,4 @@ export default interface Order{
     date? : Date;
     createdBy?: string;
     totalPrice?: number;
-}
+}   

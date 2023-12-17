@@ -4,18 +4,17 @@ import OrderDetailPage from "./page/OrderDetailPage";
 import OrderDetail from "../interfaces/OrderDetail";
 import { ChangAmountsProps} from "./page/OrderPage";
 
-
-export default function OrderDetailManager({changeAmounts}:  ChangAmountsProps){
+export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmountsProps & {orderID : string}){
     //State:
     const [products, setProducts] = useState<Product[]>([]);
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
-    
+
     //Effect
     useEffect(()=>{
         if (changeAmounts) {
             changeAmounts(orderDetails);
         }
-            get();
+        get();
     },[orderDetails])
     //EventHandler
     async function get() : Promise<void>{
@@ -35,6 +34,37 @@ export default function OrderDetailManager({changeAmounts}:  ChangAmountsProps){
         }
     }
 
+    async function onInsertDetail() : Promise<void>{
+        try {
+            const response : Response = await fetch(
+                "/manager/orderdetail-manager/add",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            orderDetails: orderDetails
+                        }
+                    )
+                }
+            ) 
+            
+
+            //Parse response body to json
+            const {success,message, orderDetailList} : {success:boolean, message: string, orderDetailList:any} = await response.json();
+            console.log("Lỗi ở sau đây")
+            if(success){
+                alert("Thành công");
+                
+            }else{
+                alert(message);
+                console.log(orderDetailList)
+            }
+            
+        } catch (error) {
+            alert("Có lỗi trong quá trình tạo đơn hàng");
+        }
+    }
+
     async function changeAmountProduct(orderDetailData : OrderDetail) : Promise<void>{
 
         try {
@@ -44,7 +74,7 @@ export default function OrderDetailManager({changeAmounts}:  ChangAmountsProps){
                     method: "POST",
                     body: JSON.stringify(
                         {
-                            orderID: orderDetailData.orderId,
+                            orderID: orderID,
                             product: orderDetailData.product,
                             amount: orderDetailData.amount,
                         }
@@ -70,6 +100,6 @@ export default function OrderDetailManager({changeAmounts}:  ChangAmountsProps){
 
     //View
     return(
-        <OrderDetailPage productList={products} orderDetails={orderDetails} changeAmount={changeAmountProduct}/>
+        <OrderDetailPage productList={products} orderDetails={orderDetails} changeAmount={changeAmountProduct} onInsert={onInsertDetail}/>
     )
 }

@@ -110,9 +110,10 @@ h2{
 .orderAmout{
     height: 25px;
 }
-.orderId,.orderTotal{
+.orderId,.orderTotal, .orderDate{
     width: 310px;
     height: 25px;
+    font-weight: bold;
 }
 .orderUser,.orderItem{
     width: 320px;
