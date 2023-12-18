@@ -11,6 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     //Converting orderDetail data to Order Detail
     var orderDetailList: OrderDetail[] = await orderDetailService.multiDataToOrderDetail(orderDetails, path);
 
+  
     for (const orderDetail of orderDetailList) {
         await orderDetailService.insert(orderDetail);
     }

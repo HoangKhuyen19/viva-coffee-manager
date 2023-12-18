@@ -1,153 +1,96 @@
-import OrderDetail from "@/app/interfaces/OrderDetail"
-import Product from "@/app/interfaces/Product";
-import { useState } from "react"
-import { ProductProps } from "./page/ProductPage";
+import { useEffect, useState } from "react";
+import OrderPage from "./page/OrderPage";
+import Order from "../interfaces/Order";
+import User from "../interfaces/User";
+import OrderDetail from "../interfaces/OrderDetail";
 
 
+export default function OrderManager() {
+    //State:
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [accounts, setAccounts] = useState<User[]>([]);
+    const [totalPrices, setTotalPrices] = useState<number>()
+    //Effect
+    useEffect(() => {
+        get();
+    }, [totalPrices])
 
-//Type
-export type OnInsertEvenHandler = () => void;
+    
 
-//Interface
-export interface OnInsertProps{
-    onInsert? :OnInsertEvenHandler;
-}
-//Type
-export type ChangeProductAmountEventHandler = (orderDetail: OrderDetail) => void;
+    //Function
+    async function get() {
+        try {
+            //Sending http request
+            const response: Response = await fetch("/manager/order-manager");
 
-//Interface
-export interface ChangeAmountProps {
-    changeAmount?: ChangeProductAmountEventHandler;
-}
-interface OrderDetailsProps {
-    orderDetails?: OrderDetail[];
-}
+            //Parse response body to json
+            const { success, orders, accounts }: { success: boolean, message: string, orders: Order[], accounts: User[] } = await response.json();
 
-interface OptionProductProps {
-    product: Product;
-}
-
-interface OrderDetailRowProps {
-    orderDetail?: OrderDetail;
-}
-
-
-
-export default function OrderDetailPage({ orderDetails, productList, changeAmount, onInsert }: OrderDetailsProps & ProductProps & ChangeAmountProps & OnInsertProps) {
-    //States:
-    const [orderDetail, setOrderDetail] = useState<OrderDetail>({});
-
-    //Event Handler
-    function onOrderDetailChanged({ target }: any) {
-        //Get name:
-        const name: string = target.name;
-
-        //Get value
-        const value: any = target.value;
-
-        //Update fields
-        setOrderDetail({ ...orderDetail, [name]: value })
-    }
-
-    function addProduct(event: any) {
-        //Preventing default event
-        event.preventDefault();
-
-        if ((orderDetail.amount || orderDetail.product) === undefined) {
-            alert("Vui lòng chọn đủ thông tin để thêm")
-        }
-        else {
-            //Call if changeAmount exist
-            if (changeAmount) {
-                changeAmount(orderDetail)
+            //Get successfully
+            if (success) {
+                setOrders(orders);
+                setAccounts(accounts);
             }
-
-            //Update order detail
-            setOrderDetail({});
-        }
-    }
-    function OptionProduct({ product }: OptionProductProps) {
-        return (
-            <option value={product.id}>
-                {product.name}
-            </option>
-        )
-    }
-
-    function rowOnclick(orderDetail?: OrderDetail) {
-        if (orderDetail) {
-            setOrderDetail(orderDetail);
+        } catch (error) {
+            alert("Có lỗi trong quá trình truy cập tới đơn hàng");
         }
     }
 
-    function OrderDetailRow({ orderDetail, index }: OrderDetailRowProps & { index: number }) {
-        return (
-            <tr onClick={() => rowOnclick(orderDetail ? orderDetail : undefined)}>
-                <td>{index + 1}</td>
-                <td>{orderDetail?.product}</td>
-                <td>{orderDetail?.amount}</td>
-                <td>{orderDetail?.totalPrice}</td>
-            </tr>
-        )
+    async function changeAmounts(orderDetails: OrderDetail[]): Promise<void> {
+
+        try {
+            const response: Response = await fetch(
+                "/manager/order-manager/changeamounts",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            orderDetails: orderDetails
+                        }
+                    )
+                }
+            )
+
+            const { success, totalPrice }: { success: boolean, totalPrice: number } = await response.json();
+
+            if (success) {
+                setTotalPrices(totalPrice);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình xử lý");
+        }
     }
 
-    function lowerOnInsert(event: any){
-        event.preventDefault();
+    async function onInsert(order: Order): Promise<void> {
+        try {
+            const response: Response = await fetch(
+                "/manager/order-manager/add",
+                {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                             id :order.id,
+                             date: order.date,
+                             createdBy: order.createdBy,
+                             totalPrice: order.totalPrice
+                        }
+                    )
+                }
+            )
 
-        if(onInsert){
-            onInsert();
+            const {success, message} : {success:boolean,message:string} = await response.json();
+
+            if(success){
+                get();
+            }else{
+                alert(message);
+            }
+        } catch (error) {
+            alert("Có lỗi trong quá trình xử lý");
         }
     }
     //View
     return (
-        <div className="from-overlay">
-            <div className="form-add">
-                    <select className="orderItem" name="product" value={orderDetail.product ? orderDetail.product : ""} onChange={onOrderDetailChanged} >
-                        <option value="" hidden>Sản phẩm</option>
-                        {
-                            productList.map((product, index) => (<OptionProduct key={index} product={product} />))
-                        }
-                    </select>
-
-                    {/* Amount */}
-                    <input className="orderAmout" type="number" name="amount" value={orderDetail.amount ? orderDetail.amount : ""} onChange={onOrderDetailChanged} placeholder="Số lượng"/>
-
-                    {/* Add Product */}
-                    <button className="btn-add" onClick={addProduct}> Thêm </button>
-
-                    {/* Submit */}
-                    <div className="bottom">
-                        <button className="btn-order" onSubmit={lowerOnInsert} onClick={lowerOnInsert}>Tạo đơn</button>
-                    </div>
-            </div>
-
-
-            {/* Table */}
-            <div className="tableDetail">
-                <table border={1} cellPadding={5} className="productOrder">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Thành tiền</th>
-                        </tr>
-                    </thead>
-
-                    {/* Order Detail Row */}
-                    <tbody className="bodyProductOrder">
-                        {
-                            orderDetails?.map((orderDetail, index) => (
-                                <OrderDetailRow key={index} orderDetail={orderDetail} index={index} />
-                            ))
-                        }
-                    </tbody>
-                </table><br></br>
-            </div>
-
-
-
-
-        </div>
+        <OrderPage orders={orders} accounts={accounts} totalPrice={totalPrices} changeAmounts={changeAmounts} onInsert={onInsert} />
     )
 }

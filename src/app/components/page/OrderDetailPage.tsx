@@ -5,12 +5,7 @@ import { ProductProps } from "./ProductPage";
 
 
 //Type
-export type OnInsertEvenHandler = () => void;
 
-//Interface
-export interface OnInsertProps{
-    onInsert? :OnInsertEvenHandler;
-}
 //Type
 export type ChangeProductAmountEventHandler = (orderDetail: OrderDetail) => void;
 
@@ -32,7 +27,7 @@ interface OrderDetailRowProps {
 
 
 
-export default function OrderDetailPage({ orderDetails, productList, changeAmount, onInsert }: OrderDetailsProps & ProductProps & ChangeAmountProps & OnInsertProps) {
+export default function OrderDetailPage({ orderDetails, productList, changeAmount }: OrderDetailsProps & ProductProps & ChangeAmountProps ) {
     //States:
     const [orderDetail, setOrderDetail] = useState<OrderDetail>({});
 
@@ -90,13 +85,6 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
         )
     }
 
-    function lowerOnInsert(event: any){
-        event.preventDefault();
-
-        if(onInsert){
-            onInsert();
-        }
-    }
     //View
     return (
         <div className="from-overlay">
@@ -113,11 +101,6 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
 
                     {/* Add Product */}
                     <button className="btn-add" onClick={addProduct}> Thêm </button>
-
-                    {/* Submit */}
-                    <div className="bottom">
-                        <button className="btn-order" onSubmit={lowerOnInsert} onClick={lowerOnInsert}>Tạo đơn</button>
-                    </div>
             </div>
 
 
@@ -143,10 +126,7 @@ export default function OrderDetailPage({ orderDetails, productList, changeAmoun
                     </tbody>
                 </table><br></br>
             </div>
-
-
-
-
+            
         </div>
     )
 }

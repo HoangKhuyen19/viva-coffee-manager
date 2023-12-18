@@ -9,6 +9,7 @@ import OrderDetail from "@/app/interfaces/OrderDetail";
 //Type
 export type ChangeProductsAmountEventHandler = (orderDetails: OrderDetail[]) => void;
 export type OnInsertEvenHandler = (fields: Order) => void
+
 //Interface
 export interface ChangAmountsProps {
     changeAmounts?: ChangeProductsAmountEventHandler;
@@ -36,9 +37,10 @@ export default function OrderPage({ orders, accounts, changeAmounts, totalPrice,
     const [detailStatus, setDetailStatus] = useState(false);
     const [fields, setFields] = useState<Order>({});
 
+
     //Effect:
     useEffect(() => {
-        if(totalPrice !== undefined){
+        if (totalPrice !== undefined) {
             setFields((prevFields) => ({ ...prevFields, totalPrice: totalPrice }));
         }
     }, [totalPrice]);
@@ -85,7 +87,7 @@ export default function OrderPage({ orders, accounts, changeAmounts, totalPrice,
         return (
             <tr>
                 <td>{order.id}</td>
-                <td>{order.date instanceof Date ? order.date.toLocaleDateString().slice(0, 10): order.date}</td>
+                <td>{order.date instanceof Date ? order.date.toLocaleDateString().slice(0, 10) : order.date}</td>
                 <td>{order.createdBy}</td>
                 <td>{order.totalPrice}</td>
                 <td>
@@ -106,18 +108,18 @@ export default function OrderPage({ orders, accounts, changeAmounts, totalPrice,
 
     function lowerOnInsert(event: any) {
         event.preventDefault();
-
+   
         if (onInsert) {
             onInsert(fields);
         }
-
+        
         closeForm();
     }
     function getOrderId() {
         const date = new Date();
         const year = String(date.getFullYear()).slice(2, 4);
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDay()).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
         const seconds = String(date.getSeconds()).padStart(2, '0')
@@ -201,8 +203,16 @@ export default function OrderPage({ orders, accounts, changeAmounts, totalPrice,
                             <input className="orderTotal" type="number" name="totalPrice" value={fields.totalPrice ? fields.totalPrice : ""} onChange={onFieldChanged} placeholder="Tổng thành tiền" required disabled /><br />
 
                             {/* Order Detail Manager */}
-                             <OrderDetailManager changeAmounts={changeAmounts} orderID={fields.id ? fields.id : ""} />
+                            <OrderDetailManager 
+                                changeAmounts={changeAmounts} 
+                                orderID={fields.id ? fields.id : ""} 
+                                // onInsertDetail={ onInsertDetail }
+                            />
 
+                            {/* Submit */}  
+                            <div className="bottom">
+                                <button className="btn-order" type="submit">Tạo đơn</button>
+                            </div>
                         </form>
                     </div>
                 </div>

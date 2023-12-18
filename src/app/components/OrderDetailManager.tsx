@@ -4,18 +4,29 @@ import OrderDetailPage from "./page/OrderDetailPage";
 import OrderDetail from "../interfaces/OrderDetail";
 import { ChangAmountsProps} from "./page/OrderPage";
 
-export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmountsProps & {orderID : string}){
+//Type
+export type OnInsertEvenHandler = () => void;
+
+//Interface
+export interface OnInsertProps{
+    onInsertDetail? :OnInsertEvenHandler;
+}
+
+export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmountsProps & {orderID : string} & OnInsertProps){
     //State:
     const [products, setProducts] = useState<Product[]>([]);
-    const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
+    const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+
 
     //Effect
     useEffect(()=>{
         if (changeAmounts) {
             changeAmounts(orderDetails);
         }
+
         get();
     },[orderDetails])
+
     //EventHandler
     async function get() : Promise<void>{
         try {
@@ -34,7 +45,7 @@ export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmoun
         }
     }
 
-    async function onInsertDetail() : Promise<void>{
+    async function onInsertDetailPage() : Promise<void>{
         try {
             const response : Response = await fetch(
                 "/manager/orderdetail-manager/add",
@@ -50,14 +61,11 @@ export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmoun
             
 
             //Parse response body to json
-            const {success,message, orderDetailList} : {success:boolean, message: string, orderDetailList:any} = await response.json();
-            console.log("Lỗi ở sau đây")
+            const {success,message} : {success:boolean, message: String} = await response.json();
             if(success){
                 alert("Thành công");
-                
             }else{
                 alert(message);
-                console.log(orderDetailList)
             }
             
         } catch (error) {
@@ -88,6 +96,7 @@ export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmoun
             //If successfully
             if(success){
                 //Update order details
+                console.log(orderDetail);
                 setOrderDetails([...orderDetails,orderDetail]);
             }else{
                 //If failed
@@ -100,6 +109,6 @@ export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmoun
 
     //View
     return(
-        <OrderDetailPage productList={products} orderDetails={orderDetails} changeAmount={changeAmountProduct} onInsert={onInsertDetail}/>
+        <OrderDetailPage productList={products} orderDetails={orderDetails} changeAmount={changeAmountProduct}/>
     )
 }
