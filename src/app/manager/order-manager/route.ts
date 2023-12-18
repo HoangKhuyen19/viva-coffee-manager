@@ -1,7 +1,7 @@
 import { orderService } from "@/domain/ModelService";
 import Order from "@/domain/models/Order";
 import {  NextResponse } from "next/server";
-import OrderData from "./aliases";
+import {OrderData} from "./aliases";
 import User from "@/domain/models/User";
 import AccountData from "../account-manager/aliases";
 

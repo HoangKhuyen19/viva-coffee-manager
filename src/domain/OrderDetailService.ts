@@ -79,7 +79,7 @@ export default class OrderDetailService implements IOrderDetailService{
     }
     async insert(target: OrderDetail): Promise<void> {
         //Try converting
-        const data : OrderDetailData = await this.orderDetailToData(target);
+        const data : OrderDetailData = this.orderDetailToData(target);
         
         //Try inserting
         try {
@@ -90,7 +90,7 @@ export default class OrderDetailService implements IOrderDetailService{
     }
     async update(target: OrderDetail): Promise<void> {
         //Try converting
-        const data: OrderDetailData = await this.orderDetailToData(target);
+        const data: OrderDetailData =  this.orderDetailToData(target);
 
         //Try updating
         try {

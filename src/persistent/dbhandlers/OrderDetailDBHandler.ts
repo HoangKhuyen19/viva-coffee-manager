@@ -14,7 +14,7 @@ export class OrderDetailDBHandler implements IOderDetailDBHandler{
     public constructor(){}
 
     //Methods:
-    public async get(oderId:string, product:string) : Promise<OrderDetailData | undefined>{
+    public async get(orderId:string, product:string) : Promise<OrderDetailData | undefined>{
         //Access to collection
         try{
             var {connection, collection} : AccessCollection = await accessCollection(collectionName);
@@ -24,7 +24,7 @@ export class OrderDetailDBHandler implements IOderDetailDBHandler{
 
         //Try getting order detail
         try{
-            var document : WithId<Document> | null = await collection.findOne({oderId:oderId, product:product});
+            var document : WithId<Document> | null = await collection.findOne({orderId:orderId, product:product});
         }catch(error:any){
             connection.close();
             throw error;

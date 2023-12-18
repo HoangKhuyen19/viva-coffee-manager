@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Product from "../interfaces/Product";
 import OrderDetailPage from "./page/OrderDetailPage";
 import OrderDetail from "../interfaces/OrderDetail";
-import { ChangAmountsProps} from "./page/OrderPage";
+
 
 //Type
 export type OnInsertEvenHandler = () => void;
@@ -12,20 +12,10 @@ export interface OnInsertProps{
     onInsertDetail? :OnInsertEvenHandler;
 }
 
-export default function OrderDetailManager({changeAmounts, orderID}:  ChangAmountsProps & {orderID : string} & OnInsertProps){
+export default function OrderDetailManager({orderID}:  {orderID : string} & OnInsertProps){
     //State:
     const [products, setProducts] = useState<Product[]>([]);
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
-
-
-    //Effect
-    useEffect(()=>{
-        if (changeAmounts) {
-            changeAmounts(orderDetails);
-        }
-
-        get();
-    },[orderDetails])
 
     //EventHandler
     async function get() : Promise<void>{
