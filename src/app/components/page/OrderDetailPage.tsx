@@ -1,9 +1,8 @@
 import OrderDetail from "@/app/interfaces/OrderDetail"
 import Product from "@/app/interfaces/Product";
-import { useState } from "react";
+import { useMemo } from "react";
 
-type AddProductEventHandler = (orderDetail: OrderDetail) => void;
-
+type RemoveRowDetailEventHandler = (id: string) => void;
 //Interface
 export interface OrderDetailsProps {
     orderDetails: OrderDetail[];
@@ -11,82 +10,32 @@ export interface OrderDetailsProps {
 export interface ProductsProps {
     products: Product[];
 }
-export interface AddProductProps {
-    onAddProduct?: AddProductEventHandler;
+export interface RemoveRowDetailProps{
+    removeDetail? : RemoveRowDetailEventHandler;
 }
 
-export default function OrderDetailPage({ orderDetails, products, onAddProduct }: OrderDetailsProps & ProductsProps & AddProductProps) {
-    //State
-    const [orderDetail, setOrderDetail] = useState<OrderDetail>({})
+export default function OrderDetailPage({ orderDetails, products ,removeDetail,detailStatus}: OrderDetailsProps & ProductsProps & RemoveRowDetailProps & {detailStatus : boolean}) {
 
     //Event Handler
-    function onOrderDetailChanged({ target }: any) {
-        //Get name:
-        const name: string = target.name;
+    const getNameProduct = useMemo(() => {
+        return (orderDetail: OrderDetail) => {
+            const product = products.find((product) => product.id === orderDetail.product);
+            return product?.name;
+        };
+    }, [products]);
 
-        //Get value
-        const value: any = target.value;
 
-        //Update order detail fields:
-        setOrderDetail({ ...orderDetail, [name]: value });
-    }
-    function rowOnclick(orderDetail?: OrderDetail) {
-        if (orderDetail) {
-            setOrderDetail(orderDetail);
-        }
-    }
-    function lowerAddProduct(event: any) {
-        //Preventing default event:
+
+    function lowerRemoveDetail(event : any,id : string){
         event.preventDefault();
 
-        //Not all product details provided
-        if ((orderDetail.amount || orderDetail.product) === undefined) {
-            alert("Vui lòng chọn đủ thông tin để thêm sản phẩm");
-        } else {
-            //Find product option
-            const product = products.find((product) => (product.id === orderDetail.product))
-
-            //Calculate total price order detail
-            orderDetail.totalPrice = (orderDetail.amount as number) * (product?.price as number)
-
-            //Update order detail
-            setOrderDetail({ product: product?.name as string })
-
-
-            //Call if onAddProduct exist
-            if (onAddProduct) {
-                onAddProduct(orderDetail);
-            }
-
-            //Update order detail
-            setOrderDetail({});
+        if(removeDetail){
+            removeDetail(id);
         }
     }
     //View
     return (
         <div className="from-overlay">
-            <div className="form-add">
-
-                {/* Select product */}
-                <select className="orderItem" name="product" value={orderDetail.product ? orderDetail.product : ""}
-                    onChange={onOrderDetailChanged}>
-                    <option value="" hidden> Sản phẩm </option>
-
-                    {/* Render product list */}
-                    {
-                        products.map((product) => (
-                            <OptionProduct key={product.id} product={product} />
-                        ))
-                    }
-                </select>
-
-                {/* Amount */}
-                <input className="orderAmout" type="number" name="amount" value={orderDetail.amount ? orderDetail.amount : ""} onChange={onOrderDetailChanged} placeholder="Số lượng" />
-
-                {/* Add Product */}
-                <button className="btn-add" onClick={lowerAddProduct}> Thêm </button>
-            </div>
-
 
             {/* Table */}
             <div className="tableDetail">
@@ -97,6 +46,7 @@ export default function OrderDetailPage({ orderDetails, products, onAddProduct }
                             <th>Sản phẩm</th>
                             <th>Số lượng</th>
                             <th>Thành tiền</th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -112,33 +62,23 @@ export default function OrderDetailPage({ orderDetails, products, onAddProduct }
             </div>
         </div>
     )
-
-    //Component
-    function OptionProduct({ product }: OptionProductProps) {
-        return (
-            <option value={product.id}>
-                {product.name}
-            </option>
-        );
+    //Local interface
+    interface OrderDetailRowProps {
+        orderDetail: OrderDetail;
     }
 
+    //Component
     function OrderDertailRow({ orderDetail, index }: OrderDetailRowProps & { index: number }) {
         return (
-            <tr onClick={() => rowOnclick(orderDetail ? orderDetail : undefined)}>
+            <tr> 
                 <td>{index + 1}</td>
-                <td>{orderDetail.product}</td>
+                <td>{getNameProduct(orderDetail)}</td>
                 <td>{orderDetail.amount}</td>
                 <td>{orderDetail.totalPrice}</td>
+                <td><button onClick={(event) => lowerRemoveDetail(event,orderDetail.product?orderDetail.product : "")} hidden={detailStatus}></button></td>
             </tr>
         )
     }
 }
 
-//Local interface
-interface OptionProductProps {
-    product: Product;
-}
-interface OrderDetailRowProps {
-    orderDetail: OrderDetail;
-}
 

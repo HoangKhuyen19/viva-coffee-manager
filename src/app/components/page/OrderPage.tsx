@@ -11,6 +11,7 @@ import OrderDetailPage from "./OrderDetailPage";
 export type ChangeProductsAmountEventHandler = (orderDetails: OrderDetail[]) => void;
 export type OnInsertEvenHandler = (fields: Order) => void
 export type LoadPageEventHandler = () => void;
+export type KeyWordEventHandler = (keyword: string) => void;
 //Interface
 interface OrdersProps {
     orders: Order[];
@@ -25,17 +26,34 @@ interface LoadPageProps {
     loadPage?: LoadPageEventHandler;
 }
 
-export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & AccountProps & LoadPageProps) {
+interface OnSearchProps {
+    onSearch?: KeyWordEventHandler;
+}
+interface OnDeleteProps {
+    onDelete?: KeyWordEventHandler;
+}
+
+export default function OrderPage({ orders, accounts, loadPage, onSearch, onDelete }: OrdersProps & AccountProps & LoadPageProps & OnSearchProps & OnDeleteProps) {
     //States:
     const [isFormVisible, setFormVisible] = useState(false);
     const [detailStatus, setDetailStatus] = useState(false);
-
-    //All fields of order and order detail        
     const [order, setOrder] = useState<Order>({});
-    const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
-    const [products, setProducts] = useState<Product[]>([])
+    const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [orderDetail, setOrderDetail] = useState<OrderDetail>({})
 
     //EventHandler:
+    function onOrderDetailChanged({ target }: any) {
+        //Get name:
+        const name: string = target.name;
+
+        //Get value
+        const value: any = target.value;
+
+        //Update order detail fields:
+        setOrderDetail({ ...orderDetail, [name]: value });
+    }
+
     function showForm() {
         getOrderDetail();
 
@@ -53,6 +71,7 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
         setDetailStatus(false);
         setOrder({});
         setOrderDetails([]);
+        console.log("False nè", detailStatus)
     };
 
     function onDetailStatus(order: Order) {
@@ -68,6 +87,12 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
         setOrder(order);
     }
 
+    function onLowerDelete(id : string){
+        if(onDelete){
+            onDelete(id);
+        }
+    }
+
     function onOrderFieldsChanged({ target }: any) {
         //Get name
         const name: any = target.name;
@@ -77,16 +102,6 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
 
         //Update fields
         setOrder({ ...order, [name]: value });
-    }
-
-    function lowerOnInsert(event: any) {
-        //Preventing default event
-        event.preventDefault();
-
-        //call insertOder
-        insertOrder(order, orderDetails);
-
-        closeForm();
     }
     function getOrderId() {
         const date = new Date();
@@ -98,17 +113,49 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
         const seconds = String(date.getSeconds()).padStart(2, '0')
         return "DH" + year + month + day + hours + minutes + seconds;
     }
-    function addProduct(orderDetail: OrderDetail) {
-        console.log("Ở đây" ,orderDetails)
-        //Calculator total price order
-        const updateOrder = { ...order };
-        updateOrder.totalPrice = (updateOrder.totalPrice || 0) + (orderDetail.totalPrice || 0);
+    function lowerAddProduct(event: any) {
+        //Preventing default event:
+        event.preventDefault();
 
-        //Update total price order
-        setOrder(updateOrder)
+        //Not all product details provided
+        if ((orderDetail.amount || orderDetail.product) === undefined) {
+            alert("Vui lòng chọn đủ thông tin để thêm sản phẩm");
+        } else {
+            //Find product option
+            const product = products.find((product) => (product.id === orderDetail.product))
 
-        //Add order detail to order detail list
-        setOrderDetails([...orderDetails, orderDetail]);
+            //Calculate total price order detail
+            orderDetail.totalPrice = (orderDetail.amount as number) * (product?.price as number)
+
+            //Update order detail
+            setOrderDetail({ product: product?.name as string })
+
+            //Calculator total price order
+            const updateOrder = { ...order };
+            updateOrder.totalPrice = (updateOrder.totalPrice || 0) + (orderDetail.totalPrice || 0);
+
+            //Update total price order
+            setOrder(updateOrder)
+
+            //Add order detail to order detail list
+            setOrderDetails([...orderDetails, orderDetail]);
+
+            //Update order detail
+            setOrderDetail({});
+        }
+    }
+
+    function lowerOnInsert(event: any) {
+        //Preventing default event
+        event.preventDefault();
+
+        //call insertOder
+        insertOrder(order, orderDetails);
+
+        closeForm();
+    }
+    function removeDetail(id: string) {
+        setOrderDetails(orderDetails.filter((orderDetail) => orderDetail.product !== id));
     }
 
 
@@ -119,7 +166,7 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
             <div>
                 <div className="form-search">
                     <label htmlFor="orderSearch">Đơn hàng :</label>
-                    <Search />
+                    <Search onSearch={onSearch ? onSearch : undefined} />
                     <button className="btn-searchadd" type="button" onClick={showForm}>Thêm</button>
                 </div><br />
             </div>
@@ -154,7 +201,7 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
                     <div className=" form-oder">
                         <form onSubmit={lowerOnInsert}>
                             <span className="close-btn" onClick={closeForm}>X</span>
-                            <h2>Đơn hàng</h2>
+                            <h2>ĐƠN HÀNG</h2>
 
                             {/* Order ID */}
                             <input className="orderId" type="text" name="id" value={order.id ? order.id : getOrderId()} onChange={onOrderFieldsChanged} placeholder="Mã đơn hàng" required disabled />
@@ -178,11 +225,43 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
                                 }
                             </select><br />
 
+                            {/* order detail fields */}
+                            {
+                                !detailStatus && (
+                                    <div className="form-add">
+
+                                        {/* Select product */}
+                                        <select className="orderItem" name="product" value={orderDetail.product ? orderDetail.product : ""}
+                                            onChange={onOrderDetailChanged}>
+                                            <option value="" hidden> Sản phẩm </option>
+
+                                            {/* Render product list */}
+                                            {
+                                                products.map((product) => (
+                                                    <OptionProduct key={product.id} product={product} />
+                                                ))
+                                            }
+                                        </select>
+
+                                        {/* Amount */}
+                                        <input className="orderAmout" type="number" name="amount" value={orderDetail.amount ? orderDetail.amount : ""} onChange={onOrderDetailChanged} placeholder="Số lượng" />
+
+                                        {/* Add Product */}
+                                        <button className="btn-add" onClick={lowerAddProduct}> Thêm </button>
+                                    </div>
+                                )
+                            }
+
                             {/* Total Price */}
-                            <input className="orderTotal" type="number" name="totalPrice" value={order.totalPrice ? order.totalPrice : ""} onChange={onOrderFieldsChanged} placeholder="Tổng thành tiền" required disabled /><br />
+                            <div className="totalPrice">
+                                <span>Tổng thành tiền: </span>
+                                <input className="orderTotal" type="number" name="totalPrice" value={order.totalPrice ? order.totalPrice : ""} onChange={onOrderFieldsChanged} placeholder="0" required disabled />
+                            </div>
+
 
                             {/* Order Detail Manager */}
-                            <OrderDetailPage orderDetails={orderDetails} products={products} onAddProduct={addProduct} />
+                            <OrderDetailPage orderDetails={orderDetails} products={products} removeDetail={removeDetail} detailStatus={detailStatus}/>
+
 
                             {/* Submit */}
                             {
@@ -210,7 +289,7 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
                 <td>{order.totalPrice}</td>
                 <td>
                     <button className="button-update" onClick={() => onDetailStatus(order)}>Chi tiết</button>
-                    <button className="button-delete">Xóa</button>
+                    <button className="button-delete" onClick={() => onLowerDelete(order.id ? order.id :"")}>Xóa</button>
                 </td>
             </tr>
         )
@@ -224,6 +303,13 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
         )
     }
 
+    function OptionProduct({ product }: OptionProductProps) {
+        return (
+            <option value={product.id}>
+                {product.name}
+            </option>
+        );
+    }
     //Route
     async function getOrderDetail(order?: Order): Promise<void> {
         try {
@@ -235,7 +321,7 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
 
             if (success) {
                 setProducts(products);
-                if(orderDetails){
+                if (orderDetails) {
                     setOrderDetails(orderDetails);
                 }
             }
@@ -277,4 +363,9 @@ export default function OrderPage({ orders, accounts, loadPage }: OrdersProps & 
             alert("Có lỗi trong quá trình tạo hoá đơn");
         }
     }
+
+}
+
+interface OptionProductProps {
+    product: Product;
 }

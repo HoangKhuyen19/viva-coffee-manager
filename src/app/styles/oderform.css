@@ -7,32 +7,39 @@
     margin-left: 5px;
     width: 70px;
 }
-.btn-searchadd:hover{
+
+.btn-searchadd:hover {
     font-size: 16px;
 }
-.form-oder{
+
+.form-oder {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    position: relative; 
+    position: relative;
 }
-#productTable{
+
+#productTable {
     width: 80%;
     border-collapse: collapse;
     border-color: black;
     margin-left: 110px;
-   
+
 }
-#productTable th{
-   background-color: rgb(222,184,135); 
-   text-align: center;
-    
+
+#productTable th {
+    background-color: rgb(222, 184, 135);
+    text-align: center;
+
 }
-#productTable td{
+
+#productTable td {
     text-align: center;
 }
-.button-update,.button-delete {
-    background-color:rgb(222,184,135);
+
+.button-update,
+.button-delete {
+    background-color: rgb(222, 184, 135);
     border: 0px;
     border-radius: 4px;
     padding: 2px;
@@ -40,9 +47,12 @@
     margin-left: 5px;
 
 }
-.button-delete:hover,.button-update:hover{
+
+.button-delete:hover,
+.button-update:hover {
     font-size: 16px;
 }
+
 /* div form*/
 .form-overlay {
     /* display: none; */
@@ -53,13 +63,15 @@
     align-items: center;
     justify-content: center;
 }
+
 .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
     cursor: pointer;
 }
-.container-oder{
+
+.container-oder {
     display: none;
     position: fixed;
     top: 0;
@@ -82,63 +94,81 @@ label {
 
 
 /* form */
-.container-oder{
+.container-oder {
     display: flex;
     justify-content: center;
-    
+
 }
-h2{
-   color: #ca7826;
+
+h2 {
+    color: #ca7826;
 }
-.form-oder{
+
+.form-oder {
     text-align: center;
     border: 1px solid black;
     width: 550px;
-    height: 500px; 
+    height: 500px;
     margin-top: 30px;
     border-radius: 5px;
-     margin-bottom: 100px; 
-    
+    margin-bottom: 100px;
+
 }
-.orderId,.orderUser,.orderDate,.orderTotal,.orderAmout,.orderItem{
+
+.orderId,
+.orderUser,
+.orderDate,
+.orderTotal,
+.orderAmout,
+.orderItem {
     padding: 4px;
     border: 1px solid black;
     margin-bottom: 10px;
     border-radius: 5px;
 }
 
-.orderAmout{
+.orderAmout {
     height: 25px;
 }
-.orderId,.orderTotal, .orderDate{
+
+.orderId,
+.orderTotal,
+.orderDate {
     width: 310px;
     height: 25px;
     font-weight: bold;
 }
-.orderUser,.orderItem{
+
+.orderUser,
+.orderItem {
     width: 320px;
     height: 35px;
     border-radius: 5px;
-   
+
 }
-.orderDate{
+
+.orderDate {
     width: 310px;
     height: 25px;
-  
+
 }
+
 /* button add */
-.form-add{
+.form-add {
     margin-left: 15px;
 }
-.orderItem{
+
+.orderItem {
     margin-left: 56px;
     width: 145px;
 }
-.orderAmout{
+
+.orderAmout {
     width: 160px;
     margin-left: 5px;
 }
-.btn-add{
+
+.btn-add {
     width: 60px;
     background-color: #CD853F;
     height: 25px;
@@ -146,7 +176,8 @@ h2{
     border: 0px;
     margin-left: 15px;
 }
-.btn-order{
+
+.btn-order {
     background-color: #CD853F;
     width: 100px;
     height: 30px;
@@ -155,16 +186,28 @@ h2{
     margin-bottom: 20px;
     font-weight: bold;
 }
-.btn-order:hover{
+
+.btn-order:hover {
     background-color: rgb(126, 209, 126);
 
 }
-.btn-add:hover{
+
+.btn-add:hover {
     background-color: #e9ac6f;
 }
+.orderTotal {
+    background-color: white;
+    width: 195px;
+    border: 0;
+}
+
+.totalPrice{
+    font-size: 15px;
+} 
+
 /* table */
 
-.productOrder {
+/* .productOrder {
     display: block;
     width: 100%;
     border-collapse: collapse;
@@ -187,6 +230,7 @@ h2{
     min-width: 126px;
     text-align: center;
     border: 0.3px solid;
+    font-size: 15px;
 }
 
 .productOrder th {
@@ -194,9 +238,72 @@ h2{
     position: sticky;
     top: 0;
     z-index: 1;
+} */
+
+
+.productOrder {
+    display: block;
+    width: 100%;
+    border-collapse: collapse;
+    border: 0.2px solid;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.productOrder tbody {
+    width: 100%;
+}
+
+.productOrder th{
+    text-align: center;
+    border: 1px solid;
+    font-size: 15px;
+    height:25px;
+}
+.productOrder td {
+    text-align: center;
+    border: 1px solid;
+    font-size: 15px;
+}
+
+.productOrder th {
+    background-color: #CD853F;
+    position: sticky;
+    top: 0;
+    z-index: 0;
+}
+
+/* Đặt chiều rộng cố định cho từng cột */
+.productOrder th:nth-child(1),
+.productOrder td:nth-child(1){
+    width: 50px; 
+}
+.productOrder th:nth-child(2),
+.productOrder td:nth-child(2){
+    width: 160px;
+}
+.productOrder th:nth-child(3),
+.productOrder td:nth-child(3),
+.productOrder th:nth-child(4),
+.productOrder td:nth-child(4) {
+    width: 120px;
+}
+.productOrder th:nth-child(5),
+.productOrder td:nth-child(5){
+    width: 45px;
+}
+
+.productOrder button{
+    width: 15px;
+    height:15px;
+    background-color: red;
 }
 
 
 
 
-    
+
+
+
+
+

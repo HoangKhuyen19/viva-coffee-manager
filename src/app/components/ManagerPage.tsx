@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faList, faBook, faMugHot, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { ProductTypeManager } from "./ProductTypeManager";
 
+
 //Type Tab
 type Tab = "ProductTypeManager" | "ProductManager" | "AccountManager" | "OrderManager" | null;
 
@@ -14,7 +15,7 @@ export default function ManagerPage() {
     //States:
     const [user, setUser] = useState({ fullName: "", permission: "" })
     const [selectedTab, setSelectedTab] = useState<Tab>(null);
-    
+
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
         setSelectedTab(tab)
@@ -22,6 +23,15 @@ export default function ManagerPage() {
 
     const getTabClass = (tab: Tab) => {
         return tab == selectedTab ? "selectedTab" : "";
+    }
+
+    function logout() {
+        var userConfirmed = confirm("Bạn có chắc chắn muốn đăng xuất?");
+
+        if (userConfirmed) {
+            sessionStorage.clear();
+            window.location.href = "/"
+        }
     }
 
     //useEffect:
@@ -33,7 +43,7 @@ export default function ManagerPage() {
             const userData = JSON.parse(userStored);
             setUser({ fullName: userData.fullName, permission: userData.permission })
         }
-    },[])
+    }, [])
 
     //View
     return (
@@ -87,8 +97,9 @@ export default function ManagerPage() {
                     <div className="bottom">
                         <div className="line"></div>
                         {/* Button log out */}
-                        <button>
-                        <FontAwesomeIcon icon={faRightFromBracket} className="icon" /> Đăng xuất
+                        <button onClick={logout}>
+                            <FontAwesomeIcon icon={faRightFromBracket} className="icon" />
+                            Đăng xuất
                         </button>
                     </div>
                 </div>
@@ -98,7 +109,7 @@ export default function ManagerPage() {
             {/* Right-content */}
             <div className="div-content-right">
                 {selectedTab === null && <div className="img"> </div>}
-                {selectedTab === "ProductTypeManager" && <ProductTypeManager/>}
+                {selectedTab === "ProductTypeManager" && <ProductTypeManager />}
                 {selectedTab === "ProductManager" && <ProductManager />}
                 {selectedTab === "AccountManager" && <AccountManager />}
                 {selectedTab === "OrderManager" && <OrderManager />}
