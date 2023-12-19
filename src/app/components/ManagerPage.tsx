@@ -15,7 +15,7 @@ export default function ManagerPage() {
     //States:
     const [user, setUser] = useState({ fullName: "", permission: "" })
     const [selectedTab, setSelectedTab] = useState<Tab>(null);
-    const [permission,setPremission] = useState(false);
+    const [permission, setPremission] = useState(false);
 
     //Event handler:
     const handlerTabClick = (tab: Tab) => {
@@ -44,7 +44,7 @@ export default function ManagerPage() {
         if (userStored) {
             const userData = JSON.parse(userStored);
             setUser({ fullName: userData.fullName, permission: userData.permission })
-            if(userData.permission == "ADMIN"){
+            if (userData.permission === "ADMIN") {
                 setPremission(true);
             }
         }
@@ -76,22 +76,30 @@ export default function ManagerPage() {
                 {/* Navigation */}
                 <div className="nav-manager">
                     {/* Button product type manager */}
-                    <button onClick={() => handlerTabClick("ProductTypeManager")} className={getTabClass("ProductTypeManager")} hidden={permission}>
-                        <FontAwesomeIcon icon={faList} className="icon" />
-                        Quản lý loại sản phẩm
-                    </button>
+                    
+                    {
+                        permission && (
+                            <>
+                                <button onClick={() => handlerTabClick("ProductTypeManager")} className={getTabClass("ProductTypeManager")}>
+                                    <FontAwesomeIcon icon={faList} className="icon" />
+                                    Quản lý loại sản phẩm
+                                </button>
 
-                    {/* Button product manager */}
-                    <button onClick={() => handlerTabClick("ProductManager")} className={getTabClass("ProductManager")} hidden={permission}>
-                        <FontAwesomeIcon icon={faMugHot} className="icon" />
-                        Quản lý sản phẩm
-                    </button>
+                                    {/* Button product manager */}
+                                <button onClick={() => handlerTabClick("ProductManager")} className={getTabClass("ProductManager")} >
+                                    <FontAwesomeIcon icon={faMugHot} className="icon" />
+                                    Quản lý sản phẩm
+                                </button>
 
-                    {/* Button account manager */}
-                    <button onClick={() => handlerTabClick("AccountManager")} className={getTabClass("AccountManager")} hidden={permission}>
-                        <FontAwesomeIcon icon={faUsers} className="icon" />
-                        Quản lý tài khoản
-                    </button>
+                                {/* Button account manager */}
+                                <button onClick={() => handlerTabClick("AccountManager")} className={getTabClass("AccountManager")} >
+                                    <FontAwesomeIcon icon={faUsers} className="icon" />
+                                    Quản lý tài khoản
+                                </button>
+                            </>
+                        )
+                    }
+                    
 
                     {/* Button order manager */}
                     <button onClick={() => handlerTabClick("OrderManager")} className={getTabClass("OrderManager")}>
