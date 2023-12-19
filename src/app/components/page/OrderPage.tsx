@@ -48,7 +48,12 @@ export default function OrderPage({ orders, accounts, loadPage, onSearch, onDele
         const name: string = target.name;
 
         //Get value
-        const value: any = target.value;
+        let value: any = target.value;
+
+        //Parse Int if name is amount
+        if (name === 'amount') {
+            value = parseInt(value);
+        }
 
         //Update order detail fields:
         setOrderDetail({ ...orderDetail, [name]: value });
@@ -125,8 +130,8 @@ export default function OrderPage({ orders, accounts, loadPage, onSearch, onDele
             const product = products.find((product) => (product.id === orderDetail.product))
 
             //Calculate total price order detail
-            orderDetail.totalPrice = (orderDetail.amount as number) * (product?.price as number)
-
+            orderDetail.totalPrice = (orderDetail.amount || 0) * (product?.price || 0)
+            console.log(orderDetail);
             //Update order detail
             setOrderDetail({ product: product?.name as string })
 
@@ -215,10 +220,11 @@ export default function OrderPage({ orders, accounts, loadPage, onSearch, onDele
                                 onChange={onOrderFieldsChanged}
                                 placeholder="Ngày tạo"
                                 required
+                                disabled={detailStatus}
                             />
 
                             {/* Created By */}
-                            <select className="orderUser" name="createdBy" value={order.createdBy ? order.createdBy : ""} onChange={onOrderFieldsChanged} required>
+                            <select className="orderUser" name="createdBy" value={order.createdBy ? order.createdBy : ""} onChange={onOrderFieldsChanged} required disabled={detailStatus}>
                                 <option value="" hidden>Người tạo</option>
                                 {
                                     accounts.map((account) => (<OptionAccount key={account.username} account={account} />))

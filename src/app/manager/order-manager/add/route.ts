@@ -75,7 +75,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
                 //Update if order detail exist
                 if(detail){
-                    orderDetail.Amount = (detail.Amount|| 0) + (orderDetail.Amount || 0)
+                    orderDetail.Amount = (detail.Amount as number) + (orderDetail.Amount as number)
                     orderDetail.TotalPrice = (detail.TotalPrice|| 0) + (orderDetail.TotalPrice || 0)
                     await orderDetailService.update(orderDetail);
                 }else{
